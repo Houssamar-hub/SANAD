@@ -81,5 +81,7 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Server data
-server/data/
+# Server database files
+server/data/db/
+!server/data/dataset/
+!server/data/seeds.json

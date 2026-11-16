@@ -1,0 +1,32 @@
+[
+  {"text": "Coucou, comment tu vas ?", "intent": "GENERAL_CONVERSATION", "language": "fr", "mode": "MODE_A"},
+  {"text": "Slm cava", "intent": "GENERAL_CONVERSATION", "language": "arabizi", "mode": "MODE_A"},
+  {"text": "أهلاً وسهلاً بكِ في سند", "intent": "GENERAL_CONVERSATION", "language": "arabic", "mode": "MODE_A"},
+  {"text": "صافي شكرا بزاف على المعلومات", "intent": "GENERAL_CONVERSATION", "language": "darija", "mode": "MODE_A"},
+
+  {"text": "3at9oni kay9talni daba f bit", "intent": "EMERGENCY", "language": "arabizi", "mode": "MODE_C"},
+  {"text": "Au secours il me bat à mort appelez la police 19 vite", "intent": "EMERGENCY", "language": "fr", "mode": "MODE_C"},
+  {"text": "عتقوني النجدة راه كيهددني بالسلاح دابا", "intent": "EMERGENCY", "language": "darija", "mode": "MODE_C"},
+
+  {"text": "Rajli kaydrbni bzf f dar", "intent": "DOMESTIC_VIOLENCE", "language": "arabizi", "mode": "MODE_C"},
+  {"text": "Mon mari me bat régulièrement et m'a expulsée du foyer", "intent": "DOMESTIC_VIOLENCE", "language": "fr", "mode": "MODE_C"},
+  {"text": "راجلي كيعنفني جسدياً ونفسياً", "intent": "DOMESTIC_VIOLENCE", "language": "darija", "mode": "MODE_C"},
+
+  {"text": "Taharouch f chari3 kaytaba3ni", "intent": "SEXUAL_HARASSMENT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Harcèlement sexuel répété dans les transports publics", "intent": "SEXUAL_HARASSMENT", "language": "fr", "mode": "MODE_B"},
+  {"text": "التحرش الجنسي في الشارع العام", "intent": "SEXUAL_HARASSMENT", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Kifach nchki b ibtizaz f whatsapp tsawri?", "intent": "CYBER_HARASSMENT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Chantage et extorsion avec menaces de diffuser des photos intimes", "intent": "CYBER_HARASSMENT", "language": "fr", "mode": "MODE_B"},
+  {"text": "تهديد بنشر صوري في مواقع التواصل الاجتماعي", "intent": "CYBER_HARASSMENT", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Kifach ndir chkaya f mahkama?", "intent": "LEGAL_PROCEDURE", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Comment porter plainte pour violence conjugale au Maroc ?", "intent": "LEGAL_PROCEDURE", "language": "fr", "mode": "MODE_B"},
+
+  {"text": "Fin nl9a centre d'ecoute w iwa2?", "intent": "REQUEST_SUPPORT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Recherche d'une association de soutien juridique pour les femmes", "intent": "REQUEST_SUPPORT", "language": "fr", "mode": "MODE_B"},
+
+  {"text": "Chhal l3o9oba f l9anoun 103-13?", "intent": "LEGAL_QUESTION", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Que dit le code pénal marocain concernant les violences ?", "intent": "LEGAL_QUESTION", "language": "fr", "mode": "MODE_B"},
+  {"text": "ما هي المقتضيات القانونية لطلاق الشقاق والنفقة؟", "intent": "LEGAL_QUESTION", "language": "arabic", "mode": "MODE_B"}
+]

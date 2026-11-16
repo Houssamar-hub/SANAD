@@ -1,0 +1,70 @@
+{
+  "intents": [
+    {
+      "name": "GENERAL_CONVERSATION",
+      "description": "Salutations, formules de politesse, discussions quotidiennes et questions d'ordre général ne nécessitant aucun conseil juridique.",
+      "mode": "MODE_A"
+    },
+    {
+      "name": "LEGAL_QUESTION",
+      "description": "Questions sur les lois marocaines, le Code de la Famille (Moudawana), le Code Pénal, sanctions ou droits fondamentaux.",
+      "mode": "MODE_B"
+    },
+    {
+      "name": "DOMESTIC_VIOLENCE",
+      "description": "Violences physiques, psychologiques ou économiques exercées au sein du couple ou de la famille par le conjoint/partenaire.",
+      "mode": "MODE_C"
+    },
+    {
+      "name": "PHYSICAL_VIOLENCE",
+      "description": "Coups, blessures, agressions physiques en dehors ou au sein du foyer.",
+      "mode": "MODE_C"
+    },
+    {
+      "name": "SEXUAL_HARASSMENT",
+      "description": "Harcèlement sexuel de rue, gestes ou propos obscènes, agressions sexuelles.",
+      "mode": "MODE_B"
+    },
+    {
+      "name": "WORKPLACE_HARASSMENT",
+      "description": "Harcèlement moral, sexuel ou abus de pouvoir par un employeur, supérieur ou collègue de travail.",
+      "mode": "MODE_B"
+    },
+    {
+      "name": "CYBER_HARASSMENT",
+      "description": "Chantage en ligne, sextorsion, menaces de publication de photos ou données intimes sur les réseaux sociaux.",
+      "mode": "MODE_B"
+    },
+    {
+      "name": "DISCRIMINATION",
+      "description": "Discrimination basée sur le genre, inégalités au travail ou questions d'accès aux droits successoraux.",
+      "mode": "MODE_B"
+    },
+    {
+      "name": "LEGAL_PROCEDURE",
+      "description": "Démarches pour déposer plainte, démarches judiciaires, obtention d'un certificat médical, rôle du Procureur du Roi.",
+      "mode": "MODE_B"
+    },
+    {
+      "name": "REQUEST_SUPPORT",
+      "description": "Recherche d'un centre d'écoute, d'un refuge, d'une assistance psychologique ou d'une association d'aide aux femmes.",
+      "mode": "MODE_B"
+    },
+    {
+      "name": "EMERGENCY",
+      "description": "Danger mortel ou physique immédiat nécessitant l'intervention urgente des forces de l'ordre (Police 19, Gendarmerie 177).",
+      "mode": "MODE_C"
+    },
+    {
+      "name": "OTHER",
+      "description": "Requêtes hors périmètre ou ambiguës.",
+      "mode": "MODE_A"
+    }
+  ],
+  "supported_languages": [
+    { "code": "darija", "name": "Moroccan Darija (Arabic script)" },
+    { "code": "arabizi", "name": "Moroccan Arabizi (Latin script)" },
+    { "code": "arabic", "name": "Modern Standard Arabic" },
+    { "code": "fr", "name": "French" }
+  ]
+}

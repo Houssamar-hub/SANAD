@@ -1,0 +1,65 @@
+[
+  {"text": "Salam kidayra labas 3lik?", "intent": "GENERAL_CONVERSATION", "language": "arabizi", "mode": "MODE_A"},
+  {"text": "Bonjour, comment vas-tu aujourd'hui ?", "intent": "GENERAL_CONVERSATION", "language": "fr", "mode": "MODE_A"},
+  {"text": "السلام عليكم كيدايرة أختي؟", "intent": "GENERAL_CONVERSATION", "language": "darija", "mode": "MODE_A"},
+  {"text": "صباح الخير، كيف حالك؟", "intent": "GENERAL_CONVERSATION", "language": "arabic", "mode": "MODE_A"},
+  {"text": "Slm labas", "intent": "GENERAL_CONVERSATION", "language": "arabizi", "mode": "MODE_A"},
+  {"text": "Qui es-tu et que fais-tu ?", "intent": "GENERAL_CONVERSATION", "language": "fr", "mode": "MODE_A"},
+  {"text": "شكون نتي وشنو كتديري؟", "intent": "GENERAL_CONVERSATION", "language": "darija", "mode": "MODE_A"},
+  {"text": "Merci beaucoup pour ton aide !", "intent": "GENERAL_CONVERSATION", "language": "fr", "mode": "MODE_A"},
+  {"text": "Chokran bzaf", "intent": "GENERAL_CONVERSATION", "language": "arabizi", "mode": "MODE_A"},
+  {"text": "شكراً جزيلاً لكِ", "intent": "GENERAL_CONVERSATION", "language": "arabic", "mode": "MODE_A"},
+
+  {"text": "3at9oni rajli kaydrbni daba f dar khatir", "intent": "EMERGENCY", "language": "arabizi", "mode": "MODE_C"},
+  {"text": "Au secours il a un couteau il veut me tuer !", "intent": "EMERGENCY", "language": "fr", "mode": "MODE_C"},
+  {"text": "عتقوني عيطو للبوليس دابا راه غادي يقتلني", "intent": "EMERGENCY", "language": "darija", "mode": "MODE_C"},
+  {"text": "النجدة أرجوكم أنا في خطر مميت اتصلوا بالشرطة", "intent": "EMERGENCY", "language": "arabic", "mode": "MODE_C"},
+  {"text": "3t9oni راه سد عليا الباب وكيضرب فيا", "intent": "EMERGENCY", "language": "darija", "mode": "MODE_C"},
+  {"text": "Il est devant ma porte et menace d'entrer me massacrer", "intent": "EMERGENCY", "language": "fr", "mode": "MODE_C"},
+
+  {"text": "Rajli dima kaydrebni w kayhini f dar", "intent": "DOMESTIC_VIOLENCE", "language": "arabizi", "mode": "MODE_C"},
+  {"text": "Mon mari me frappe violemment depuis des mois", "intent": "DOMESTIC_VIOLENCE", "language": "fr", "mode": "MODE_C"},
+  {"text": "راجلي ديما كيعنفني وكيضربني قدام الدراري", "intent": "DOMESTIC_VIOLENCE", "language": "darija", "mode": "MODE_C"},
+  {"text": "أتعرض للعنف الأسري والضرب المتكرر من زوجي", "intent": "DOMESTIC_VIOLENCE", "language": "arabic", "mode": "MODE_C"},
+  {"text": "Tardani rajli mn dar f lil", "intent": "DOMESTIC_VIOLENCE", "language": "arabizi", "mode": "MODE_C"},
+  {"text": "طردني زوجي من بيت الزوجية بدون مأوى", "intent": "DOMESTIC_VIOLENCE", "language": "arabic", "mode": "MODE_C"},
+
+  {"text": "Chi wahd drbni f chari3 w jra7ni", "intent": "PHYSICAL_VIOLENCE", "language": "arabizi", "mode": "MODE_C"},
+  {"text": "J'ai été agressée physiquement dans la rue par un inconnu", "intent": "PHYSICAL_VIOLENCE", "language": "fr", "mode": "MODE_C"},
+  {"text": "واحد الشخص تعدى عليا جسدياً وضربني", "intent": "PHYSICAL_VIOLENCE", "language": "darija", "mode": "MODE_C"},
+  {"text": "اعتداء جسدي أسفر عن كدمات وجروح", "intent": "PHYSICAL_VIOLENCE", "language": "arabic", "mode": "MODE_C"},
+
+  {"text": "Wahd kayteba3ni f chari3 w kaytaharach biya", "intent": "SEXUAL_HARASSMENT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Un homme me harcèle et me suit dans la rue avec des gestes obscènes", "intent": "SEXUAL_HARASSMENT", "language": "fr", "mode": "MODE_B"},
+  {"text": "كاين واحد كيتعرض ليا فالزنقة وكيدير ليا التحرش الجنسي", "intent": "SEXUAL_HARASSMENT", "language": "darija", "mode": "MODE_B"},
+  {"text": "ما هي عقوبة التحرش الجنسي في الفضاء العام؟", "intent": "SEXUAL_HARASSMENT", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Patron dyali kaydghat 3lia w kaytaharach f lkhdma", "intent": "WORKPLACE_HARASSMENT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Mon employeur me fait du chantage sexuel au travail", "intent": "WORKPLACE_HARASSMENT", "language": "fr", "mode": "MODE_B"},
+  {"text": "المدير في الخدمة كيهددني بالطرد التعسفي يلا ما استاجبتش ليه", "intent": "WORKPLACE_HARASSMENT", "language": "darija", "mode": "MODE_B"},
+  {"text": "الحماية القانونية من التحرش المهني في مدونة الشغل", "intent": "WORKPLACE_HARASSMENT", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Kayhdr lia b tsawri f facebook w kaytleb flous ibtizaz", "intent": "CYBER_HARASSMENT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "On me fait du chantage numérique avec mes photos intimes sur WhatsApp", "intent": "CYBER_HARASSMENT", "language": "fr", "mode": "MODE_B"},
+  {"text": "واحد كيبتزني بصوري الخاصة وكيطلب فلوس", "intent": "CYBER_HARASSMENT", "language": "darija", "mode": "MODE_B"},
+  {"text": "الابتزاز الإلكتروني والتهديد بنشر صور خاصة دون موافقة", "intent": "CYBER_HARASSMENT", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Kifach ndir chkaya 3nd wakil lmalik?", "intent": "LEGAL_PROCEDURE", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Quelles sont les étapes pour déposer une plainte au tribunal ?", "intent": "LEGAL_PROCEDURE", "language": "fr", "mode": "MODE_B"},
+  {"text": "كيفاش ناخد شهادة طبية باش نحط شكاية فالمحكمة؟", "intent": "LEGAL_PROCEDURE", "language": "darija", "mode": "MODE_B"},
+  {"text": "المسطرة القانونية لوضع شكاية لدى خلية التكفل بالنساء بالمحكمة الابتدائية", "intent": "LEGAL_PROCEDURE", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Bghit chi jam3iya wla centre d'ecoute 3afak", "intent": "REQUEST_SUPPORT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Où trouver un centre d'écoute et d'hébergement d'urgence à Casablanca ?", "intent": "REQUEST_SUPPORT", "language": "fr", "mode": "MODE_B"},
+  {"text": "بغيت جمعية تعاووني بمحامي بالمجان", "intent": "REQUEST_SUPPORT", "language": "darija", "mode": "MODE_B"},
+  {"text": "أبحث عن مركز إيواء واستماع للنساء ضحايا العنف", "intent": "REQUEST_SUPPORT", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Chnou kay9ol l9anoun 103-13 3la 3o9oubat l3onf?", "intent": "LEGAL_QUESTION", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Quelles sont les dispositions de la Moudawana concernant le divorce pour discorde (Chiqaq) ?", "intent": "LEGAL_QUESTION", "language": "fr", "mode": "MODE_B"},
+  {"text": "شنو هي حقوق الزوجة فالنفقة والحضانة من بعد الطلاق؟", "intent": "LEGAL_QUESTION", "language": "darija", "mode": "MODE_B"},
+  {"text": "ما هي المقتضيات القانونية للقانون 103-13 الخاص بمناهضة العنف ضد النساء؟", "intent": "LEGAL_QUESTION", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Kayn tamyiz f lkhdma bin rjal w l3yalat", "intent": "DISCRIMINATION", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Quelles sont les lois contre la discrimination salariale envers les femmes au Maroc ?", "intent": "DISCRIMINATION", "language": "fr", "mode": "MODE_B"},
+  {"text": "التمييز ضد المرأة في الترقية والأجور", "intent": "DISCRIMINATION", "language": "arabic", "mode": "MODE_B"}
+]

@@ -1,9 +1,12 @@
 const express = require('express');
-const router = express.Router();
-const aiController = require('../controllers/aiController');
+const aiRouter = require('../modules/ai/ai.routes');
+const aiController = require('../modules/ai/ai.controller');
 const { optionalAuth } = require('../middleware/authMiddleware');
 
-router.post('/chat', optionalAuth, aiController.chat);
+const router = express.Router();
+
+// Mount all advanced AI Assistant routes
+router.use('/', optionalAuth, aiRouter);
 router.post('/feedback', optionalAuth, aiController.feedback);
 
 module.exports = router;

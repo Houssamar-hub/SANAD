@@ -1,0 +1,43 @@
+[
+  {"text": "Salam kidayra", "intent": "GENERAL_CONVERSATION", "language": "arabizi", "mode": "MODE_A"},
+  {"text": "Bonjour, c'est quoi SANAD ?", "intent": "GENERAL_CONVERSATION", "language": "fr", "mode": "MODE_A"},
+  {"text": "صباح الخير كيدايرة لاباس عليك؟", "intent": "GENERAL_CONVERSATION", "language": "darija", "mode": "MODE_A"},
+  {"text": "شكراً جزيلاً مع السلامة", "intent": "GENERAL_CONVERSATION", "language": "arabic", "mode": "MODE_A"},
+
+  {"text": "3at9oni ghadi y9telni daba 3ayto l police 19", "intent": "EMERGENCY", "language": "arabizi", "mode": "MODE_C"},
+  {"text": "Au secours il veut me tuer il a une arme sauvez moi", "intent": "EMERGENCY", "language": "fr", "mode": "MODE_C"},
+  {"text": "عتقوني راه محبوسة وكيضربني بالدم", "intent": "EMERGENCY", "language": "darija", "mode": "MODE_C"},
+
+  {"text": "Rajli kaydrbni dima f dar", "intent": "DOMESTIC_VIOLENCE", "language": "arabizi", "mode": "MODE_C"},
+  {"text": "Mon mari me frappe et m'insulte au domicile conjugal", "intent": "DOMESTIC_VIOLENCE", "language": "fr", "mode": "MODE_C"},
+  {"text": "العنف الزوجي والضرب المتكرر من طرف الزوج", "intent": "DOMESTIC_VIOLENCE", "language": "arabic", "mode": "MODE_C"},
+
+  {"text": "Drbni chi wahd f chari3 w jra7ni", "intent": "PHYSICAL_VIOLENCE", "language": "arabizi", "mode": "MODE_C"},
+  {"text": "Coups et blessures volontaires subis dans l'espace public", "intent": "PHYSICAL_VIOLENCE", "language": "fr", "mode": "MODE_C"},
+
+  {"text": "Kaytaharach biya f chari3 b klam 9bih", "intent": "SEXUAL_HARASSMENT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Harcèlement sexuel de rue avec propos et gestes déplacés", "intent": "SEXUAL_HARASSMENT", "language": "fr", "mode": "MODE_B"},
+  {"text": "التحرش الجنسي في الشارع العام بالأقوال والأفعال", "intent": "SEXUAL_HARASSMENT", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Patron kayhadedni b tord mn lkhedma", "intent": "WORKPLACE_HARASSMENT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Harcèlement moral et menaces de licenciement abusif par le supérieur", "intent": "WORKPLACE_HARASSMENT", "language": "fr", "mode": "MODE_B"},
+
+  {"text": "Kayhadedni b tsawri ibtizaz f facebook", "intent": "CYBER_HARASSMENT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Chantage numérique et extorsion avec menaces de publication de photos", "intent": "CYBER_HARASSMENT", "language": "fr", "mode": "MODE_B"},
+  {"text": "الابتزاز الإلكتروني بنشر صور ومحادثات شخصية", "intent": "CYBER_HARASSMENT", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Kifach ndir chkaya 3nd wakil lmalik?", "intent": "LEGAL_PROCEDURE", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Quelles sont les démarches pour obtenir un certificat médical et porter plainte ?", "intent": "LEGAL_PROCEDURE", "language": "fr", "mode": "MODE_B"},
+  {"text": "كيفاش نحط شكاية فالمحكمة الابتدائية ضد العنف؟", "intent": "LEGAL_PROCEDURE", "language": "darija", "mode": "MODE_B"},
+
+  {"text": "Bghit centre d'ecoute w mosa3ada 9anoniya", "intent": "REQUEST_SUPPORT", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Centres d'hébergement d'urgence et associations pour femmes battues", "intent": "REQUEST_SUPPORT", "language": "fr", "mode": "MODE_B"},
+  {"text": "أين أجد مركز استماع وإيواء ومساعدة قانونية؟", "intent": "REQUEST_SUPPORT", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Chnou kaygoul l9anoun 103-13?", "intent": "LEGAL_QUESTION", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Quels sont les articles du Code Pénal sanctionnant les violences faites aux femmes ?", "intent": "LEGAL_QUESTION", "language": "fr", "mode": "MODE_B"},
+  {"text": "ما هي حقوق الزوجة في مدونة الأسرة المغربية؟", "intent": "LEGAL_QUESTION", "language": "arabic", "mode": "MODE_B"},
+
+  {"text": "Tamyiz f lkhdma 3la asas ljins", "intent": "DISCRIMINATION", "language": "arabizi", "mode": "MODE_B"},
+  {"text": "Discrimination basée sur le genre et inégalités de traitement au Maroc", "intent": "DISCRIMINATION", "language": "fr", "mode": "MODE_B"}
+]
