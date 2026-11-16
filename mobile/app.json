@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "SANAD",
+    "slug": "sanad",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "sanad",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#29483B"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ma.sanad.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#29483B"
+      },
+      "package": "ma.sanad.app",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "SANAD utilise votre position uniquement lorsque vous choisissez de trouver un centre d'aide à proximité ou de partager votre position d'urgence avec un contact de confiance."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
