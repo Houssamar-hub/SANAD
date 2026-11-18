@@ -17,6 +17,10 @@ const quizRoutes = require('./routes/quizRoutes');
 const trustedContactRoutes = require('./routes/trustedContactRoutes');
 const incidentRoutes = require('./routes/incidentRoutes');
 const userRoutes = require('./routes/userRoutes');
+const evidenceRoutes = require('./routes/evidenceRoutes');
+const opportunityRoutes = require('./routes/opportunityRoutes');
+const shelterRoutes = require('./routes/shelterRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
@@ -76,6 +80,10 @@ app.use('/api/campaigns', preventionRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/trusted-contacts', trustedContactRoutes);
 app.use('/api/incidents', incidentRoutes);
+app.use('/api/evidence', evidenceRoutes);
+app.use('/api/opportunities', opportunityRoutes);
+app.use('/api/shelters', shelterRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
 
 // 404 Handler

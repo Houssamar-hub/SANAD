@@ -25,11 +25,15 @@ import {
   ChevronRight,
   Shield,
   Smartphone,
+  Home as HomeIcon,
+  Briefcase,
+  ChefHat,
+  Lock,
 } from 'lucide-react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { t, isRTL, openSos } = useApp();
+  const { t, isRTL, openSos, panicExit } = useApp();
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -77,19 +81,23 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* ── STATUS TOGGLE BAR (Inspired by "The card is active" with green toggle) ── */}
-        <View style={styles.statusBarCard}>
+        {/* ── STATUS TOGGLE BAR (Click to switch to Cooking Camouflage) ── */}
+        <TouchableOpacity
+          style={styles.statusBarCard}
+          onPress={panicExit}
+          activeOpacity={0.85}
+        >
           <View style={styles.statusLeft}>
             <View style={styles.statusDot} />
             <View>
               <Text style={styles.statusTitle}>Protection discrète active</Text>
-              <Text style={styles.statusSub}>Navigation sécurisée sans trace locale</Text>
+              <Text style={styles.statusSub}>Appuyez pour basculer vers les recettes de cuisine</Text>
             </View>
           </View>
           <View style={styles.toggleActive}>
             <View style={styles.toggleThumb} />
           </View>
-        </View>
+        </TouchableOpacity>
 
         {/* ── 2x2 CORE ACTIONS GRID (Inspired by Screen 1 4 Cards: Transfers, History, Deposit, Financial) ── */}
         <View style={styles.sectionHeaderRow}>
@@ -173,6 +181,42 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.listContainer}>
+          {/* Dar L-Aman - Foyers d'hébergement d'urgence */}
+          <TouchableOpacity
+            style={styles.listItem}
+            onPress={() => router.push('/shelters' as any)}
+            activeOpacity={0.75}
+          >
+            <View style={[styles.squircleIcon, { backgroundColor: '#DCFCE7' }]}>
+              <HomeIcon size={20} color={colors.secondaryDark} />
+            </View>
+            <View style={styles.listInfo}>
+              <Text style={styles.listTitle}>Dar L-Aman · Foyers d'Hébergement</Text>
+              <Text style={styles.listSub}>Mise à l'abri et refuges d'urgence sécurisés</Text>
+            </View>
+            <ChevronRight size={18} color={colors.fog} />
+          </TouchableOpacity>
+
+          <View style={styles.listDivider} />
+
+          {/* Tamkeen - Autonomie Economique */}
+          <TouchableOpacity
+            style={styles.listItem}
+            onPress={() => router.push('/empowerment' as any)}
+            activeOpacity={0.75}
+          >
+            <View style={[styles.squircleIcon, { backgroundColor: '#FEF3C7' }]}>
+              <Briefcase size={20} color="#D97706" />
+            </View>
+            <View style={styles.listInfo}>
+              <Text style={styles.listTitle}>Tamkeen · Autonomie & Emploi</Text>
+              <Text style={styles.listSub}>Formations, coopératives et microcrédit Forsa</Text>
+            </View>
+            <ChevronRight size={18} color={colors.fog} />
+          </TouchableOpacity>
+
+          <View style={styles.listDivider} />
+
           {/* Plan de sécurité */}
           <TouchableOpacity
             style={styles.listItem}
@@ -191,7 +235,7 @@ export default function HomeScreen() {
 
           <View style={styles.listDivider} />
 
-          {/* Journal des faits */}
+          {/* Coffre-fort numérique des preuves */}
           <TouchableOpacity
             style={styles.listItem}
             onPress={() => router.push('/evidence' as any)}
@@ -201,44 +245,26 @@ export default function HomeScreen() {
               <FolderLock size={20} color={colors.primary} />
             </View>
             <View style={styles.listInfo}>
-              <Text style={styles.listTitle}>Journal sécurisé des faits</Text>
-              <Text style={styles.listSub}>Conserver des preuves horodatées</Text>
+              <Text style={styles.listTitle}>Coffre-fort numérique des preuves</Text>
+              <Text style={styles.listSub}>Captures, photos et empreintes SHA-256</Text>
             </View>
             <ChevronRight size={18} color={colors.fog} />
           </TouchableOpacity>
 
           <View style={styles.listDivider} />
 
-          {/* Quiz éducatif */}
+          {/* Administration & Supervision */}
           <TouchableOpacity
             style={styles.listItem}
-            onPress={() => router.push('/quiz' as any)}
+            onPress={() => router.push('/admin' as any)}
             activeOpacity={0.75}
           >
-            <View style={[styles.squircleIcon, { backgroundColor: colors.accentOrangeLight }]}>
-              <HelpCircle size={20} color={colors.accentOrange} />
+            <View style={[styles.squircleIcon, { backgroundColor: '#F3E8FF' }]}>
+              <Lock size={20} color="#7C3AED" />
             </View>
             <View style={styles.listInfo}>
-              <Text style={styles.listTitle}>{t.quiz.title}</Text>
-              <Text style={styles.listSub}>5 questions rapides pour tester vos droits</Text>
-            </View>
-            <ChevronRight size={18} color={colors.fog} />
-          </TouchableOpacity>
-
-          <View style={styles.listDivider} />
-
-          {/* Guides cyber-protection */}
-          <TouchableOpacity
-            style={styles.listItem}
-            onPress={() => router.push('/prevention' as any)}
-            activeOpacity={0.75}
-          >
-            <View style={[styles.squircleIcon, { backgroundColor: colors.accentBlueLight }]}>
-              <Smartphone size={20} color={colors.accentBlue} />
-            </View>
-            <View style={styles.listInfo}>
-              <Text style={styles.listTitle}>Chantage & Cyber-harcèlement</Text>
-              <Text style={styles.listSub}>Conseils de protection numérique</Text>
+              <Text style={styles.listTitle}>Administration & Audit CNDP</Text>
+              <Text style={styles.listSub}>Supervision des organismes et conformité</Text>
             </View>
             <ChevronRight size={18} color={colors.fog} />
           </TouchableOpacity>

@@ -14,29 +14,51 @@ const evidenceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  description: {
+    type: String,
+    default: ''
+  },
+  category: {
+    type: String,
+    enum: ['capture_ecran', 'photo_blessure', 'enregistrement_audio', 'certificat_medical', 'temoignage', 'autre'],
+    default: 'capture_ecran'
+  },
+  incidentDate: {
+    type: Date,
+    default: Date.now
+  },
   fileReference: {
     type: String,
-    required: true
+    required: false
   },
   fileType: {
     type: String,
-    required: true
+    default: 'image'
   },
   fileSize: {
-    type: Number
+    type: Number,
+    default: 0
+  },
+  hashSha256: {
+    type: String,
+    default: ''
   },
   encrypted: {
     type: Boolean,
     default: true
   },
-  category: {
+  notes: {
     type: String,
-    enum: ['capture_ecran', 'message', 'document', 'photo', 'audio'],
-    default: 'capture_ecran'
+    default: ''
   },
-  hashSha256: {
+  tags: [{
     type: String
-  }
+  }],
+  accessLogs: [{
+    action: { type: String, enum: ['created', 'viewed', 'exported', 'updated', 'deleted'] },
+    timestamp: { type: Date, default: Date.now },
+    ip: { type: String }
+  }]
 }, {
   timestamps: true
 });

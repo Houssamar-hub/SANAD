@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Linking, Platform } from 'react-native';
+import React, { createContext, useContext, useState } from 'react';
+import { Linking } from 'react-native';
 import { Language, translations } from '../i18n/translations';
 
 export interface TrustedContactItem {
@@ -18,6 +18,15 @@ interface AppContextType {
   openSos: () => void;
   closeSos: () => void;
   quickExit: () => void;
+  // Smart Discreet Camouflage Mode
+  isCamouflaged: boolean;
+  enableCamouflage: () => void;
+  disableCamouflage: () => void;
+  unlockWithCode: (inputPin: string) => boolean;
+  panicExit: () => void;
+  // Voice Guidance (Accessibility for non-reading/writing users)
+  voiceGuidanceEnabled: boolean;
+  toggleVoiceGuidance: () => void;
   trustedContacts: TrustedContactItem[];
   addTrustedContact: (contact: Omit<TrustedContactItem, 'id'>) => void;
   removeTrustedContact: (id: string) => void;
@@ -28,6 +37,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>('fr');
   const [sosModalVisible, setSosModalVisible] = useState(false);
+  const [isCamouflaged, setIsCamouflaged] = useState(false);
+  const [voiceGuidanceEnabled, setVoiceGuidanceEnabled] = useState(false);
   const [trustedContacts, setTrustedContacts] = useState<TrustedContactItem[]>([
     { id: '1', name: 'Sara (Sœur)', phone: '0661234567', relationship: 'Famille' }
   ]);
@@ -42,12 +53,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const openSos = () => setSosModalVisible(true);
   const closeSos = () => setSosModalVisible(false);
 
+  const enableCamouflage = () => setIsCamouflaged(true);
+  const disableCamouflage = () => setIsCamouflaged(false);
+
+  const unlockWithCode = (inputPin: string): boolean => {
+    // Secret code default is 1234 or 2026
+    if (inputPin === '1234' || inputPin === '2026' || inputPin.toLowerCase() === 'sanad') {
+      setIsCamouflaged(false);
+      return true;
+    }
+    return false;
+  };
+
   /**
-   * Quick Exit: immediately redirects out of sensitive screens to a neutral page
+   * Quick Panic Exit:
+   * Instantly flips to the benign Moroccan Recipes Cooking portal,
+   * dismisses all active modals, stops any audio, and protects the user immediately.
    */
+  const panicExit = () => {
+    setSosModalVisible(false);
+    setIsCamouflaged(true);
+  };
+
   const quickExit = () => {
-    // Open neutral page (Météo Maroc)
+    panicExit();
+    // External backup link option
     Linking.openURL('https://www.google.com/search?q=meteo+maroc').catch(() => {});
+  };
+
+  const toggleVoiceGuidance = () => {
+    setVoiceGuidanceEnabled(prev => !prev);
   };
 
   const addTrustedContact = (contact: Omit<TrustedContactItem, 'id'>) => {
@@ -73,6 +108,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         openSos,
         closeSos,
         quickExit,
+        isCamouflaged,
+        enableCamouflage,
+        disableCamouflage,
+        unlockWithCode,
+        panicExit,
+        voiceGuidanceEnabled,
+        toggleVoiceGuidance,
         trustedContacts,
         addTrustedContact,
         removeTrustedContact

@@ -1,22 +1,22 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { LogOut } from 'lucide-react-native';
+import { ChefHat } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../store/appStore';
 
 export const QuickExitButton: React.FC = () => {
-  const { quickExit, t } = useApp();
+  const { panicExit } = useApp();
 
   return (
     <TouchableOpacity
       style={styles.button}
-      onPress={quickExit}
+      onPress={panicExit}
       activeOpacity={0.8}
-      accessibilityLabel={t.quickExit}
+      accessibilityLabel="Sortie rapide vers recettes"
       accessibilityRole="button"
     >
-      <LogOut size={13} color={colors.mist} />
-      <Text style={styles.text}>{t.quickExit}</Text>
+      <ChefHat size={14} color="#D97706" />
+      <Text style={styles.text}>Recettes</Text>
     </TouchableOpacity>
   );
 };
@@ -25,17 +25,17 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.background,
+    backgroundColor: '#FEF3C7',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 20,
     gap: 4,
     borderWidth: 1,
-    borderColor: colors.chalk,
+    borderColor: '#FDE68A',
   },
   text: {
-    color: colors.slate,
+    color: '#B45309',
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: '800',
   },
 });

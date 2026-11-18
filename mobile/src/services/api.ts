@@ -377,6 +377,259 @@ export const FALLBACK_CENTERS = [
   }
 ];
 
+export const FALLBACK_OPPORTUNITIES = [
+  {
+    _id: 'opp_1',
+    title: 'Programme Forsa : Accompagnement & Financement Entreprenariat Féminin',
+    titleAr: 'برنامج فرصة : مواكبة وتمويل المشاريع النسائية المقاولاتية',
+    organization: 'Ministère du Tourisme et de l\'Artisanat / Forsa',
+    category: 'microfinance_forsa',
+    region: 'Toutes les régions',
+    city: 'National (12 Régions)',
+    description: 'Prêt d\'honneur à taux 0% jusqu\'à 100 000 DH avec subvention de 10 000 DH et formation par un mentor agréé.',
+    stipendOrSalary: 'Prêt 0% + 10.000 DH subvention',
+    contactPhone: '+212 5 37 67 92 00',
+    officialLink: 'https://forsa.ma',
+    verified: true
+  },
+  {
+    _id: 'opp_2',
+    title: 'Formation & Intégration en Couture Traditionnelle et Modélisme',
+    titleAr: 'تكوين وتشغيل في الخياطة والفصالة التقليدية والعصرية',
+    organization: 'Coopérative Al Amal & Entraide Nationale',
+    category: 'couture_confection',
+    region: 'Casablanca-Settat',
+    city: 'Casablanca',
+    description: 'Cycle qualifiant de 3 à 6 mois pour femmes en réinsertion sociale avec insertion professionnelle en atelier.',
+    stipendOrSalary: 'Bourse de transport + Salaire d\'insertion',
+    contactPhone: '+212 5 22 23 88 10',
+    verified: true
+  },
+  {
+    _id: 'opp_3',
+    title: 'Filière Pâtisserie Marocaine & Traiteur Solidaire',
+    titleAr: 'شعبة الطبخ والحلويات المغربية - التمكين الذاتي',
+    organization: 'Association Solidarité Féminine (ASF)',
+    category: 'cuisine_traiteur',
+    region: 'Casablanca-Settat',
+    city: 'Casablanca',
+    description: 'Programme certifié d\'autonomisation pour femmes en situation de précarité avec garderie intégrée.',
+    stipendOrSalary: 'Prise en charge complète + Rémunération',
+    contactPhone: '+212 5 22 86 28 65',
+    verified: true
+  },
+  {
+    _id: 'opp_4',
+    title: 'Coopérative Artisanale de Tissage & Huile d\'Argan',
+    titleAr: 'تعاونية نسوية للصناعة التقليدية والمنتجات المجالية',
+    organization: 'Union des Coopératives Féminines du Souss',
+    category: 'artisanat_cooperative',
+    region: 'Souss-Massa',
+    city: 'Agadir / Taroudant',
+    description: 'Activités génératrices de revenus : tissage traditionnel et valorisation des produits du terroir.',
+    stipendOrSalary: 'Revenu partagé (1 800 à 3 500 DH)',
+    contactPhone: '+212 5 28 84 55 12',
+    verified: true
+  },
+  {
+    _id: 'opp_5',
+    title: 'Microcrédit Solidaire & Accompagnement de Proximité',
+    titleAr: 'التمويل الأصغر التضامني ومواكبة الأنشطة الصغرى المدرة للدخل',
+    organization: 'Fondation Al Amana & Attawfiq Microfinance',
+    category: 'microfinance_forsa',
+    region: 'Toutes les régions',
+    city: 'Toutes les villes du Maroc',
+    description: 'Financement de 2 000 à 50 000 DH sans caution hypothécaire pour artisanes et commerçantes.',
+    stipendOrSalary: 'Micro-crédit souple à remboursement échelonné',
+    contactPhone: '+212 5 37 77 11 00',
+    verified: true
+  }
+];
+
+export const FALLBACK_SAFE_HOUSES = [
+  {
+    _id: 'sh_1',
+    name: 'Dispositif d\'Hébergement d\'Urgence INJAD (Casablanca)',
+    nameAr: 'آلية الإيواء المستعجل إنجاد ضد العنف (الدار البيضاء)',
+    region: 'Casablanca-Settat',
+    city: 'Casablanca',
+    partnerOrg: 'Fédération des Ligues des Droits des Femmes (FLDF)',
+    referralProcess: 'Accueil transitoire sur décision de la cellule d\'écoute d\'urgence ou réquisition judiciaire (Loi 103-13).',
+    referralHotline: '+212 5 22 26 14 13',
+    capacityStatus: 'places_disponibles',
+    services: ['Hébergement sécurisé', 'Restauration & Soins', 'Assistance judiciaire d\'office'],
+    confidentialityNotice: 'Adresse physique strictement confidentielle pour la sécurité des résidentes. Accueil assuré au siège de l\'association partenaire.',
+    verified: true
+  },
+  {
+    _id: 'sh_2',
+    name: 'Centre Batha d\'Accueil et de Sécurité (Fès)',
+    nameAr: 'مركز البطحاء لإيواء النساء ضحايا العنف (فاس)',
+    region: 'Fès-Meknès',
+    city: 'Fès',
+    partnerOrg: 'Initiatives pour la Protection des Droits des Femmes (IPDF)',
+    referralProcess: 'Orientation immédiate 24h/24 via brigade de police, Procureur du Roi ou permanence IPDF.',
+    referralHotline: '+212 5 35 63 80 50',
+    capacityStatus: 'places_disponibles',
+    services: ['Hébergement d\'urgence 24h/24', 'Soutien psychologique', 'Accompagnement tribunal'],
+    confidentialityNotice: 'Refuge protégé sous convention avec le Ministère de la Solidarité et l\'Entraide Nationale.',
+    verified: true
+  },
+  {
+    _id: 'sh_3',
+    name: 'Foyer de Protection Annajda (Rabat)',
+    nameAr: 'مركز النجدة للإيواء المؤقت والحماية (الرباط)',
+    region: 'Rabat-Salé-Kénitra',
+    city: 'Rabat',
+    partnerOrg: 'Union de l\'Action Féministe (UAF)',
+    referralProcess: 'Admission prioritaire pour femmes et enfants en situation de danger imminent.',
+    referralHotline: '+212 5 37 72 19 02',
+    capacityStatus: 'sur_demande_cellule',
+    services: ['Mise à l\'abri immédiate', 'Médiation juridique', 'Aide aux mineurs'],
+    confidentialityNotice: 'Adresse protégée. Orientation via le centre d\'écoute UAF Rabat.',
+    verified: true
+  },
+  {
+    _id: 'sh_4',
+    name: 'Maison de Transition Annakhil (Marrakech)',
+    nameAr: 'دار الأمان للمأوى المؤقت (مراكش)',
+    region: 'Marrakech-Safi',
+    city: 'Marrakech',
+    partnerOrg: 'Association Annakhil pour la Femme et l\'Enfant',
+    referralProcess: 'Cellule de crise conjointe avec le Tribunal de Première Instance et la Wilaya de Police.',
+    referralHotline: '+212 5 24 43 65 20',
+    capacityStatus: 'places_disponibles',
+    services: ['Hébergement transitoire', 'Cellule médico-légale', 'Aide alimentaire'],
+    confidentialityNotice: 'Lieu protégé tenu secret conformément aux protocoles de protection de la loi 103-13.',
+    verified: true
+  }
+];
+
+export const FALLBACK_RECIPES = [
+  {
+    id: 'rec_1',
+    title: 'Tajine de Veau aux Pruneaux et Amandes',
+    titleAr: 'طاجين اللحم بالبرقوق واللوز المقلي',
+    category: 'Tajines',
+    prepTime: '25 min',
+    cookTime: '1h 30 min',
+    difficulty: 'Moyen',
+    rating: 4.9,
+    servings: '4 personnes',
+    calories: '620 kcal',
+    image: 'https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&auto=format&fit=crop&q=80',
+    ingredients: [
+      '800g de viande de veau (épaule ou jarret)',
+      '2 oignons émincés finement',
+      '2 gousses d\'ail écrasées',
+      '250g de pruneaux séchés',
+      '50g d\'amandes mondées et frites',
+      '1 cuillère à café de gingembre moulu',
+      '1 cuillère à café de curcuma',
+      '1/2 cuillère à café de cannelle',
+      '1 cuillère à soupe de miel pur',
+      'Quelques pistils de safran pur',
+      'Huile d\'olive et beurre clarifié (Smen)',
+      'Graines de sésame grillées'
+    ],
+    instructions: [
+      'Faire dorer les morceaux de veau dans le tajine avec l\'huile d\'olive, l\'ail, les oignons et les épices (gingembre, curcuma, safran).',
+      'Ajouter un petit verre d\'eau tiède, couvrir et laisser mijoter à feu doux pendant environ 1 heure jusqu\'à ce que la viande devienne fondante.',
+      'Dans une petite casserole, pocher les pruneaux dans un peu de bouillon du tajine avec une pincée de cannelle et le miel jusqu\'à caramélisation.',
+      'Dresser les pruneaux chauds sur la viande, parsemer d\'amandes croustillantes et de graines de sésame dorées. Servir avec du pain marocain frais.'
+    ]
+  },
+  {
+    id: 'rec_2',
+    title: 'Couscous Royal aux Sept Légumes',
+    titleAr: 'الكسكس المغربي التقليدي بالسبع خضار',
+    category: 'Couscous',
+    prepTime: '40 min',
+    cookTime: '1h 45 min',
+    difficulty: 'Traditionnel',
+    rating: 5.0,
+    servings: '6 personnes',
+    calories: '580 kcal',
+    image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop&q=80',
+    ingredients: [
+      '500g de semoule de blé dur moyenne',
+      '700g de viande de bœuf ou agneau',
+      'Courgettes, carottes, navets, potiron rouge',
+      '1/2 chou vert pommé',
+      '1 bol de pois chiches trempés la veille',
+      '2 tomates mûres râpées',
+      '1 cuillère de smen (beurre rance marocain)',
+      'Gingembre, poivre noir, safran, sel'
+    ],
+    instructions: [
+      'Dans le bas du couscoussier, saisir la viande avec les oignons, tomates, pois chiches, smen et épices, puis couvrir d\'eau bouillante.',
+      'Humidifier la semoule avec un filet d\'eau et d\'huile, puis la cuire à la vapeur au-dessus de la marmite (1ère vapeur 20 min).',
+      'Travailler la graine avec de l\'eau tiède salée. Ajouter les légumes fermes (carottes, navets, chou) dans le bouillon.',
+      'Remettre la semoule pour une 2ème puis 3ème cuisson vapeur. Ajouter les courgettes et le potiron 15 min avant la fin.',
+      'Dresser en dôme, creuser le centre pour la viande et disposer les légumes harmonieusement avec le bouillon chaud.'
+    ]
+  },
+  {
+    id: 'rec_3',
+    title: 'Pastilla Fassie au Poulet et Amandes',
+    titleAr: 'البسطيلة الفاسية الأصيلة بالدجاج واللوز المحمر',
+    category: 'Pastillas',
+    prepTime: '50 min',
+    cookTime: '1h 15 min',
+    difficulty: 'Avancé',
+    rating: 4.9,
+    servings: '8 personnes',
+    calories: '690 kcal',
+    image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&auto=format&fit=crop&q=80',
+    ingredients: [
+      '1 poulet entier découpé',
+      '1 kg d\'oignons émincés',
+      '6 œufs battus',
+      '300g d\'amandes mondées, frites et concassées',
+      '1 paquet de feuilles de pastilla (ou ouarka)',
+      'Cannelle de Ceylan, sucre glace, eau de fleur d\'oranger',
+      'Beurre fondu pour badigeonner les feuilles'
+    ],
+    instructions: [
+      'Cuire le poulet avec les oignons, persil, coriandre, gingembre, safran et cannelle jusqu\'à ce que la chair se détache.',
+      'Désosser et effilocher finement le poulet. Faire réduire la sauce aux oignons jusqu\'à épaississement puis incorporer les œufs battus.',
+      'Mélanger les amandes concassées avec du sucre glace, de la cannelle et une cuillère d\'eau de fleur d\'oranger.',
+      'Monter la pastilla dans un moule rond en superposant les feuilles beurrées, la couche de poulet, la préparation aux œufs puis les amandes.',
+      'Fermer hermétiquement, dorer au four à 180°C pendant 30 min. Décorer de sucre glace et de cannelle.'
+    ]
+  },
+  {
+    id: 'rec_4',
+    title: 'Harira Traditionnelle & Dattes Majhoul',
+    titleAr: 'الحريرة المغربية الأصيلة مع التمر المجهول والشباكية',
+    category: 'Soupes',
+    prepTime: '20 min',
+    cookTime: '50 min',
+    difficulty: 'Facile',
+    rating: 4.8,
+    servings: '6 personnes',
+    calories: '340 kcal',
+    image: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+    ingredients: [
+      '200g de dés de viande de veau',
+      '1 bol de pois chiches trempés et émondés',
+      '1/2 bol de lentilles brunes',
+      'Céleri branche (krafes), persil et coriandre hachés',
+      '1 kg de tomates fraîches mixées',
+      '2 cuillères de concentré de tomate',
+      '1 bol de levain ou farine délayée (Tadwira)',
+      'Cheveux d\'ange (vermicelle)'
+    ],
+    instructions: [
+      'Mettre la viande, pois chiches, lentilles, oignon râpé, céleri, persil, coriandre et épices dans une marmite avec 2L d\'eau.',
+      'Laisser cuire 35 min jusqu\'à tendreté des légumineuses.',
+      'Ajouter la purée de tomate et le concentré. Porter à ébullition.',
+      'Verser la Tadwira en remuant sans arrêt pour velouter la soupe.',
+      'Ajouter les vermicelles 5 min avant d\'éteindre. Servir fumant avec des quartiers de citron et des dattes.'
+    ]
+  }
+];
+
 export const FALLBACK_QUIZZES = [
   {
     _id: 'quiz_1',

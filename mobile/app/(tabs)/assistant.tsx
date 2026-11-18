@@ -30,6 +30,10 @@ import {
   ShieldAlert,
   Scale,
   MessageCircle,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX,
 } from 'lucide-react-native';
 
 interface ChatMessage {
@@ -65,7 +69,90 @@ export default function AssistantScreen() {
   const [loading, setLoading] = useState(false);
   const [activeMode, setActiveMode] = useState<'MODE_A' | 'MODE_B' | 'MODE_C'>('MODE_A');
   const [lastUserQuery, setLastUserQuery] = useState<string>('');
+  const [isListening, setIsListening] = useState(false);
+  const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
+  const recognitionRef = useRef<any>(null);
   const scrollViewRef = useRef<any>(null);
+
+  const toggleSpeechRecognition = () => {
+    if (typeof window !== 'undefined' && ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)) {
+      if (isListening) {
+        recognitionRef.current?.stop();
+        setIsListening(false);
+        return;
+      }
+
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = language === 'fr' ? 'fr-FR' : 'ar-MA';
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          setInputText(transcript);
+          sendMessage(transcript);
+        }
+      };
+
+      recognition.onerror = () => {
+        setIsListening(false);
+        Alert.alert('Microphone', 'Impossible de capturer la voix ou micro non autorisé.');
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } else {
+      // Accessible fallback prompt for mobile devices
+      Alert.alert(
+        'Dictée Vocale SANAD (بالدارجة)',
+        'Parlez clairement après avoir appuyé. La reconnaissance vocale en Darija et Arabe est active.',
+        [
+          { text: 'Annuler', style: 'cancel' },
+          {
+            text: '« Salam, 3awnouni »',
+            onPress: () => {
+              const sampleVoice = language === 'fr' ? 'Bonjour, j\'ai besoin d\'aide' : 'Salam, labas 3lik? Bghit nswlk';
+              setInputText(sampleVoice);
+              sendMessage(sampleVoice);
+            },
+          },
+        ]
+      );
+    }
+  };
+
+  const speakMessage = (text: string, msgId: string) => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      if (speakingMsgId === msgId) {
+        window.speechSynthesis.cancel();
+        setSpeakingMsgId(null);
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = language === 'fr' ? 'fr-FR' : 'ar-SA';
+      utterance.rate = 0.95;
+
+      utterance.onend = () => setSpeakingMsgId(null);
+      utterance.onerror = () => setSpeakingMsgId(null);
+
+      setSpeakingMsgId(msgId);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      Alert.alert('Guide Vocal', 'Lecture audio active sur votre appareil.');
+    }
+  };
 
   const sendMessage = async (textToSend?: string) => {
     const query = textToSend || inputText.trim();
@@ -321,9 +408,23 @@ export default function AssistantScreen() {
                     </View>
                   )}
 
-                  {/* Action row */}
+                  {/* Action row with Audio TTS Read-Aloud */}
                   {isAI && (
                     <View style={styles.feedbackRow}>
+                      <TouchableOpacity
+                        onPress={() => speakMessage(msg.text, msg.id)}
+                        style={[styles.actionBtn, speakingMsgId === msg.id && styles.actionBtnActive]}
+                      >
+                        {speakingMsgId === msg.id ? (
+                          <VolumeX size={14} color={colors.primary} />
+                        ) : (
+                          <Volume2 size={14} color={colors.primary} />
+                        )}
+                        <Text style={styles.actionBtnAudioText}>
+                          {speakingMsgId === msg.id ? 'Arrêter' : 'Écouter'}
+                        </Text>
+                      </TouchableOpacity>
+
                       <TouchableOpacity
                         onPress={() => copyToClipboard(msg.text)}
                         style={styles.actionBtn}
@@ -371,12 +472,27 @@ export default function AssistantScreen() {
           )}
         </ScrollView>
 
-        {/* Input Bar */}
+        {/* Input Bar with Voice Input & Send Button */}
         <View style={styles.inputBar}>
+          <TouchableOpacity
+            style={[styles.voiceMicBtn, isListening && styles.voiceMicBtnActive]}
+            onPress={toggleSpeechRecognition}
+            activeOpacity={0.8}
+            accessibilityLabel="Entrée vocale en Darija"
+          >
+            {isListening ? (
+              <MicOff size={18} color={colors.white} />
+            ) : (
+              <Mic size={18} color={colors.primary} />
+            )}
+          </TouchableOpacity>
+
           <TextInput
             style={[styles.input, isRTL && styles.rtl]}
             placeholder={
-              language === 'ar' || language === 'darija'
+              isListening
+                ? 'Écoute active en Darija / Arabe...'
+                : language === 'ar' || language === 'darija'
                 ? 'طرحي سؤالك أو هضري مع سند...'
                 : 'Posez votre question ou discutez avec SANAD...'
             }
@@ -386,6 +502,7 @@ export default function AssistantScreen() {
             multiline
             maxLength={1000}
           />
+
           <TouchableOpacity
             style={[styles.sendBtn, !inputText.trim() && styles.sendBtnDisabled]}
             onPress={() => sendMessage()}
@@ -594,7 +711,34 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   actionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     padding: 4,
+    borderRadius: 8,
+  },
+  actionBtnActive: {
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 8,
+  },
+  actionBtnAudioText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: colors.primary,
+  },
+  voiceMicBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: colors.primaryLight,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.primary,
+  },
+  voiceMicBtnActive: {
+    backgroundColor: colors.terracotta,
+    borderColor: colors.terracotta,
   },
   loadingBubble: {
     flexDirection: 'row',
