@@ -55,12 +55,20 @@ export default function LegalDetailScreen() {
       ? document.simplifiedExplanationAr
       : document.simplifiedExplanation;
 
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)/legal');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <Header />
 
       <View style={styles.navBar}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backBtn} onPress={handleBack}>
           <ArrowLeft size={16} color={colors.primary} strokeWidth={2.4} />
           <Text style={styles.backBtnText}>Retour Bibliothèque</Text>
         </TouchableOpacity>

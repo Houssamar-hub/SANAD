@@ -84,6 +84,14 @@ export default function SafeHousesScreen() {
     );
   });
 
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <Header />
@@ -91,7 +99,7 @@ export default function SafeHousesScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         {/* Back and Page Header */}
         <View style={styles.pageHeader}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backBtn} onPress={handleBack}>
             <ArrowLeft size={16} color={colors.ink} />
             <Text style={styles.backBtnText}>Retour</Text>
           </TouchableOpacity>
