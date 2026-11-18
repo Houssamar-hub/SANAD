@@ -26,7 +26,7 @@ const ARABIZI_MARKERS = [
   /\b(chno|chnou|wach|wash|ndir|kifach|kifech|3lach|3afak|3andi|dyali|dyal)\b/i,
   /\b(daba|bghit|khft|kayn|kayna|bzf|bzaf|makaynch|walou|walo|chi|haja|chi haja)\b/i,
   /\b(rajli|sahbti|khti|khoya|dar|lwalida|lwalid|wldi|bnti|m3aya|m3ak)\b/i,
-  /\b(kaydrabni|kaydrbni|kayhadedni|kaytaba3ni|hchouma|wakha|machi|hadchi)\b/i,
+  /\b(kaydrabni|kaydrbni|kayhadedni|kayhddedni|kayhddni|tsawri|tsawer|tsawir|ibtizaz|kaytaba3ni|hchouma|wakha|machi|hadchi)\b/i,
   /\b(ghadi|ghadya|nmchi|lcomissariat|lma7kama|chouhad|lmo7ami)\b/i,
   /\b(l7a9|lha9|l9anoun|lqanoun|taharouch|taharrouch|ta7aroch|ta7arrouch|i3tida2)\b/i,
   /\b(nsawlk|sawlk|nswl|sawlni|nchki|ncheki|chki|t3rdt|t3redt|7o9o9|7o9ou9|jam3iya|t3awni|mochkil|lmochkil)\b/i,

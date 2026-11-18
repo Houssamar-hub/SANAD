@@ -9,6 +9,7 @@
  */
 
 const { LANGUAGES } = require('./languageService');
+const { findBestKnowledgeMatch } = require('./legalRagService');
 
 // Mode Prompts
 const SYSTEM_PROMPTS = {
@@ -156,6 +157,27 @@ async function generateAiResponse({ mode, language, message, history = [], conte
  */
 function getCuratedResponse(mode, lang, message, context = {}) {
   const lower = (message || '').toLowerCase().trim();
+
+  // ── 0. FIRST CHECK KNOWLEDGE BASE FOR SUBSTANTIVE QUESTIONS ──
+  // Check if it's NOT a mere short greeting before searching the 100 Q&A base
+  const isGreeting = /^(salam|slm|bonjour|salut|coucou|hello|labas|ca va|kidayr|kidayra|merci|chokran|choukrane|السلام|مرحبا|شكرا)[\s!.]*$/i.test(lower);
+
+  if (!isGreeting && mode !== 'MODE_C') {
+    const kbMatch = findBestKnowledgeMatch(message, lang);
+    if (kbMatch && kbMatch.score >= 8) {
+      let resp = kbMatch.localizedAnswer;
+      if (kbMatch.legalReference && !resp.includes(kbMatch.legalReference)) {
+        if (lang === 'arabizi') {
+          resp += `\n\n📌 L-marji3 l9anouni: ${kbMatch.legalReference} (${kbMatch.source})`;
+        } else if (lang === 'darija' || lang === 'arabic') {
+          resp += `\n\n📌 المرجع القانوني: ${kbMatch.legalReference} (${kbMatch.source})`;
+        } else {
+          resp += `\n\n📌 Référence légale : ${kbMatch.legalReference} (${kbMatch.source})`;
+        }
+      }
+      return resp;
+    }
+  }
 
   // ── MODE A: GENERAL CONVERSATION ──
   if (mode === 'MODE_A') {

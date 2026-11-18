@@ -9,6 +9,137 @@
  */
 
 const mongoose = require('mongoose');
+const { KNOWLEDGE_BASE } = require('./knowledgeBase');
+
+/**
+ * Text Normalizer for Arabic, Darija and Arabizi with number conversions
+ */
+function normalizeText(text) {
+  if (!text || typeof text !== 'string') return '';
+  let str = text.toLowerCase().trim();
+
+  // Remove diacritics / tashkeel
+  str = str.replace(/[\u064B-\u065F\u0670]/g, '');
+
+  // Normalize Arabic letters
+  str = str.replace(/[إأآا]/g, 'ا')
+           .replace(/[ىي]/g, 'ي')
+           .replace(/ة/g, 'ه')
+           .replace(/ؤ/g, 'و')
+           .replace(/ئ/g, 'ي');
+
+  // Strip punctuation but keep Arabizi numbers 2, 3, 5, 7, 8, 9
+  str = str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'«»]/g, ' ');
+
+  // Collapse multiple whitespaces
+  return str.replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Generates transliterated tokens for Arabizi <-> Darija matching
+ */
+function getSearchTokens(text) {
+  const normalized = normalizeText(text);
+  const words = normalized.split(/\s+/).filter(w => w.length >= 2);
+  const tokenSet = new Set(words);
+
+  // Common Arabizi to phonetic roots
+  for (const word of words) {
+    // 3 -> 3/a/e (ع)
+    // 7 -> 7/h (ح)
+    // 9 -> 9/q/k (ق)
+    // 5 -> 5/kh (خ)
+    // ch -> ch/sh (ش)
+    const simplified = word
+      .replace(/ch/g, 'sh')
+      .replace(/ou/g, 'u')
+      .replace(/3/g, 'a')
+      .replace(/7/g, 'h')
+      .replace(/9/g, 'q')
+      .replace(/5/g, 'kh');
+    tokenSet.add(simplified);
+  }
+
+  return Array.from(tokenSet);
+}
+
+/**
+ * Searches the 100+ Q&A Knowledge Base for the best matching entry
+ */
+function findBestKnowledgeMatch(query, language = 'fr') {
+  if (!query || typeof query !== 'string') return null;
+
+  const cleanQuery = normalizeText(query);
+  const queryTokens = getSearchTokens(query);
+
+  let bestEntry = null;
+  let bestScore = 0;
+
+  for (const entry of KNOWLEDGE_BASE) {
+    let score = 0;
+
+    // Check exact question matches
+    const qDarijaNorm = normalizeText(entry.questionDarija);
+    const qArabiziNorm = normalizeText(entry.questionArabizi);
+    const qArNorm = normalizeText(entry.questionAr);
+    const qFrNorm = normalizeText(entry.questionFr);
+
+    if (cleanQuery === qDarijaNorm || cleanQuery === qArabiziNorm || cleanQuery === qArNorm || cleanQuery === qFrNorm) {
+      score += 100;
+    }
+
+    // Check alternative formulations
+    for (const alt of entry.alternativeFormulations || []) {
+      const altNorm = normalizeText(alt);
+      if (cleanQuery.includes(altNorm) || altNorm.includes(cleanQuery)) {
+        score += 40;
+      }
+    }
+
+    // Check token overlaps
+    const entryText = `${qDarijaNorm} ${qArabiziNorm} ${qArNorm} ${qFrNorm} ${(entry.alternativeFormulations || []).join(' ')} ${entry.category}`.toLowerCase();
+    
+    for (const token of queryTokens) {
+      if (entryText.includes(token)) {
+        score += token.length >= 4 ? 6 : 3;
+      }
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestEntry = entry;
+    }
+  }
+
+  // Minimum threshold to consider a reliable match
+  if (bestEntry && bestScore >= 6) {
+    let localizedAnswer = bestEntry.answerFr;
+    let localizedQuestion = bestEntry.questionFr;
+
+    if (language === 'arabizi') {
+      localizedAnswer = bestEntry.answerArabizi || bestEntry.answerDarija;
+      localizedQuestion = bestEntry.questionArabizi;
+    } else if (language === 'darija') {
+      localizedAnswer = bestEntry.answerDarija;
+      localizedQuestion = bestEntry.questionDarija;
+    } else if (language === 'arabic') {
+      localizedAnswer = bestEntry.answerAr;
+      localizedQuestion = bestEntry.questionAr;
+    }
+
+    return {
+      match: bestEntry,
+      score: bestScore,
+      localizedAnswer,
+      localizedQuestion,
+      legalReference: bestEntry.legalReference,
+      source: bestEntry.source,
+      verified: true
+    };
+  }
+
+  return null;
+}
 
 // Verified Official Legal Database for SANAD
 const VERIFIED_LEGAL_CORPUS = [
@@ -228,5 +359,7 @@ function formatLegalItem(doc, language) {
 
 module.exports = {
   VERIFIED_LEGAL_CORPUS,
-  searchLegalDatabase
+  KNOWLEDGE_BASE,
+  searchLegalDatabase,
+  findBestKnowledgeMatch
 };

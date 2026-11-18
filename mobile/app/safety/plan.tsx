@@ -21,46 +21,82 @@ import {
 interface ChecklistItem {
   id: string;
   category: string;
+  categoryAr?: string;
+  categoryDarija?: string;
   title: string;
+  titleAr?: string;
+  titleDarija?: string;
   description: string;
+  descriptionAr?: string;
+  descriptionDarija?: string;
 }
 
 const SAFETY_ITEMS: ChecklistItem[] = [
   {
     id: 'place',
     category: 'Lieu de repli',
+    categoryAr: 'مكان آمن',
+    categoryDarija: 'بلاصة آمنة',
     title: 'Identifier un refuge sûr accessible 24h/24',
+    titleAr: 'تحديد ملجأ آمن متاح على مدار الساعة',
+    titleDarija: 'تحديد بلاصة آمنة تقدري تمشي ليها فأي وقت 24/24',
     description: 'Une amie de confiance, de la famille proche, ou l\'adresse d\'un centre d\'hébergement d\'urgence vérifié.',
+    descriptionAr: 'صديقة موثوقة، عائلة قريبة، أو مركز إيواء استعجالي تابع لمؤسسات الرعاية المعتمدة.',
+    descriptionDarija: 'صاحبتك كتيقي فيها، عائلتك، أو عنوان مركز إيواء واستماع موثوق.',
   },
   {
     id: 'docs',
     category: 'Documents vitaux',
+    categoryAr: 'وثائق حيوية',
+    categoryDarija: 'وراق ضرورية',
     title: 'Pochette de documents prête',
+    titleAr: 'تجهيز ملف الوثائق الشخصية العاجلة',
+    titleDarija: 'توجاد كيس فيه بطاقتك الوطنية والأوراق الرسمية',
     description: 'CIN originale ou copies certifiées, livret de famille, carnet de santé des enfants, actes notariés.',
+    descriptionAr: 'بطاقة التعريف الوطنية، الدفتر العائلي، عقود ازدياد الأبناء، والوثائق الإدارية والمالية.',
+    descriptionDarija: 'لاكارط ناسيونال، الكناش د العائلة، عقد الزواج، والدفتر الصحي د الولاد.',
   },
   {
     id: 'emergency_contacts',
     category: 'Mémoire',
+    categoryAr: 'أرقام النجدة',
+    categoryDarija: 'حفظ الأرقام',
     title: 'Mémoriser les numéros clés',
+    titleAr: 'حفظ أرقام الطوارئ غيباً',
+    titleDarija: 'حفظ أرقام الطوارئ 19 و 177 فالبال',
     description: 'Retenir par cœur le 19 (Police urbaine) et 177 (Gendarmerie) au cas où votre téléphone serait inaccessible.',
+    descriptionAr: 'حفظ الرقم 19 (الشرطة) و177 (الدرك الملكي) للاتصال من أي هاتف عند الطوارئ.',
+    descriptionDarija: 'حفظي 19 (البوليس) و 177 (الجوندارم) باش يلا التيليفون طفا ولا تحيد ليك تعيطي من أي بلاصة.',
   },
   {
     id: 'money',
     category: 'Autonomie',
+    categoryAr: 'استقلالية مالية',
+    categoryDarija: 'احتياط مالي',
     title: 'Réserve discrète de liquidités',
+    titleAr: 'مبلغ مالي نقدي احتياطي للحالات الطارئة',
+    titleDarija: 'مبلغ كاش صغير مخبي للتنقل والاستعجال',
     description: 'Une petite somme en espèces gardée hors d\'atteinte pour payer un trajet en taxi ou subvenir à l\'immédiat.',
+    descriptionAr: 'مبلغ نقدي بسيط مخصص لتغطية مصاريف الطاكسي أو الإقامة الطارئة بعيداً عن أعين المعتدي.',
+    descriptionDarija: 'شوية د الفلوس مخبية فبلاصتك باش تقطعي طاكسي ولا تدبري راسك فالحين.',
   },
   {
     id: 'code_word',
     category: 'Discrétion',
+    categoryAr: 'كلمة سر استعجالية',
+    categoryDarija: 'كلمة سر سرية',
     title: 'Mot ou code de détresse convenu',
+    titleAr: 'الاتفاق على كلمة سر لطلب النجدة مع شخص مقرب',
+    titleDarija: 'كلمة سرية متفق عليها مع صاحبتك كتعني "عيطي للبوليس دابا"',
     description: 'Un mot anodin convenu à l\'avance avec une proche qui signifie "Contacte les secours immédiatement pour moi".',
+    descriptionAr: 'كلمة أو عبارة عادية مشفرة متفق عليها مع صديقة أو قريبة تعني طلب النجدة الفورية دون إثارة الشبهات.',
+    descriptionDarija: 'كلمة عادية بحال "واش لقيتي الساروت" كتعني لصاحبتك صوني للبوليس والنجدة فوراً.',
   },
 ];
 
 export default function SafetyPlanScreen() {
   const router = useRouter();
-  const { isRTL } = useApp();
+  const { isRTL, language } = useApp();
   const [checkedIds, setCheckedIds] = useState<string[]>(['emergency_contacts']);
 
   const toggleCheck = (id: string) => {
@@ -105,6 +141,10 @@ export default function SafetyPlanScreen() {
         <View style={styles.checklist}>
           {SAFETY_ITEMS.map((item) => {
             const isChecked = checkedIds.includes(item.id);
+            const itemCategory = language === 'darija' ? (item.categoryDarija || item.categoryAr || item.category) : language === 'ar' ? (item.categoryAr || item.category) : item.category;
+            const itemTitle = language === 'darija' ? (item.titleDarija || item.titleAr || item.title) : language === 'ar' ? (item.titleAr || item.title) : item.title;
+            const itemDesc = language === 'darija' ? (item.descriptionDarija || item.descriptionAr || item.description) : language === 'ar' ? (item.descriptionAr || item.description) : item.description;
+
             return (
               <TouchableOpacity
                 key={item.id}
@@ -112,9 +152,9 @@ export default function SafetyPlanScreen() {
                 onPress={() => toggleCheck(item.id)}
                 activeOpacity={0.8}
               >
-                <View style={styles.itemHeader}>
+                <View style={[styles.itemHeader, isRTL && styles.rowReverse]}>
                   <View style={styles.categoryBadge}>
-                    <Text style={styles.categoryBadgeText}>{item.category}</Text>
+                    <Text style={styles.categoryBadgeText}>{itemCategory}</Text>
                   </View>
                   {isChecked ? (
                     <CheckCircle2 size={22} color={colors.secondaryDark} />
@@ -123,8 +163,8 @@ export default function SafetyPlanScreen() {
                   )}
                 </View>
 
-                <Text style={[styles.itemTitle, isRTL && styles.rtl]}>{item.title}</Text>
-                <Text style={[styles.itemDesc, isRTL && styles.rtl]}>{item.description}</Text>
+                <Text style={[styles.itemTitle, isRTL && styles.rtl]}>{itemTitle}</Text>
+                <Text style={[styles.itemDesc, isRTL && styles.rtl]}>{itemDesc}</Text>
               </TouchableOpacity>
             );
           })}
@@ -141,6 +181,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   content: { paddingBottom: 24 },
   rtl: { textAlign: 'right' },
+  rowReverse: { flexDirection: 'row-reverse' },
 
   navBar: {
     paddingHorizontal: 16,

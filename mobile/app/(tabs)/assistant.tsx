@@ -71,6 +71,9 @@ export default function AssistantScreen() {
   const [lastUserQuery, setLastUserQuery] = useState<string>('');
   const [isListening, setIsListening] = useState(false);
   const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
+  const [speechRate, setSpeechRate] = useState<number>(1.0);
+  const [isSpeechPaused, setIsSpeechPaused] = useState<boolean>(false);
+  const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
   const recognitionRef = useRef<any>(null);
   const scrollViewRef = useRef<any>(null);
 
@@ -79,6 +82,7 @@ export default function AssistantScreen() {
       if (isListening) {
         recognitionRef.current?.stop();
         setIsListening(false);
+        setVoiceNotice(null);
         return;
       }
 
@@ -90,18 +94,33 @@ export default function AssistantScreen() {
 
       recognition.onstart = () => {
         setIsListening(true);
+        setVoiceNotice(
+          language === 'darija'
+            ? 'كنسمعك دابا... هضري بالدارجة أو العربية'
+            : language === 'ar'
+            ? 'جاري الاستماع... تفضلي بالحديث'
+            : 'Écoute active... Parlez maintenant'
+        );
       };
 
       recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         if (transcript) {
           setInputText(transcript);
-          sendMessage(transcript);
+          setVoiceNotice(
+            language === 'darija'
+              ? 'تم التقاط الصوت! تقدري تعدلي السؤال أو تضغطي إرسال'
+              : language === 'ar'
+              ? 'تم التعرف على الصوت! يمكنكِ تعديل النص أو الضغط على إرسال'
+              : 'Texte dicté ! Vous pouvez le modifier ou l’envoyer'
+          );
+          setTimeout(() => setVoiceNotice(null), 5000);
         }
       };
 
       recognition.onerror = () => {
         setIsListening(false);
+        setVoiceNotice(null);
         Alert.alert('Microphone', 'Impossible de capturer la voix ou micro non autorisé.');
       };
 
@@ -123,7 +142,6 @@ export default function AssistantScreen() {
             onPress: () => {
               const sampleVoice = language === 'fr' ? 'Bonjour, j\'ai besoin d\'aide' : 'Salam, labas 3lik? Bghit nswlk';
               setInputText(sampleVoice);
-              sendMessage(sampleVoice);
             },
           },
         ]
@@ -134,20 +152,35 @@ export default function AssistantScreen() {
   const speakMessage = (text: string, msgId: string) => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       if (speakingMsgId === msgId) {
-        window.speechSynthesis.cancel();
-        setSpeakingMsgId(null);
-        return;
+        if (isSpeechPaused) {
+          window.speechSynthesis.resume();
+          setIsSpeechPaused(false);
+          return;
+        } else {
+          window.speechSynthesis.cancel();
+          setSpeakingMsgId(null);
+          setIsSpeechPaused(false);
+          return;
+        }
       }
 
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = language === 'fr' ? 'fr-FR' : 'ar-SA';
-      utterance.rate = 0.95;
+      const hasArabicChar = /[\u0600-\u06FF]/.test(text);
+      utterance.lang = hasArabicChar ? 'ar-SA' : (language === 'fr' ? 'fr-FR' : 'ar-SA');
+      utterance.rate = speechRate;
 
-      utterance.onend = () => setSpeakingMsgId(null);
-      utterance.onerror = () => setSpeakingMsgId(null);
+      utterance.onend = () => {
+        setSpeakingMsgId(null);
+        setIsSpeechPaused(false);
+      };
+      utterance.onerror = () => {
+        setSpeakingMsgId(null);
+        setIsSpeechPaused(false);
+      };
 
       setSpeakingMsgId(msgId);
+      setIsSpeechPaused(false);
       window.speechSynthesis.speak(utterance);
     } else {
       Alert.alert('Guide Vocal', 'Lecture audio active sur votre appareil.');
@@ -425,6 +458,26 @@ export default function AssistantScreen() {
                         </Text>
                       </TouchableOpacity>
 
+                      {/* Speed selector when active */}
+                      {speakingMsgId === msg.id && (
+                        <View style={styles.speedPillsRow}>
+                          {[0.8, 1.0, 1.2].map((rate) => (
+                            <TouchableOpacity
+                              key={rate}
+                              style={[styles.speedPill, speechRate === rate && styles.speedPillActive]}
+                              onPress={() => {
+                                setSpeechRate(rate);
+                                speakMessage(msg.text, msg.id);
+                              }}
+                            >
+                              <Text style={[styles.speedPillText, speechRate === rate && styles.speedPillTextActive]}>
+                                {rate}x
+                              </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      )}
+
                       <TouchableOpacity
                         onPress={() => copyToClipboard(msg.text)}
                         style={styles.actionBtn}
@@ -471,6 +524,14 @@ export default function AssistantScreen() {
             </View>
           )}
         </ScrollView>
+
+        {/* Voice transcription notification pill */}
+        {voiceNotice && (
+          <View style={styles.voiceNoticePill}>
+            <Mic size={14} color={colors.primary} />
+            <Text style={styles.voiceNoticeText}>{voiceNotice}</Text>
+          </View>
+        )}
 
         {/* Input Bar with Voice Input & Send Button */}
         <View style={styles.inputBar}>
@@ -785,5 +846,47 @@ const styles = StyleSheet.create({
   },
   rtl: {
     textAlign: 'right',
+  },
+  voiceNoticePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#F3E8FF',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    marginHorizontal: 12,
+    marginBottom: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#D8B4FE',
+  },
+  voiceNoticeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.primary,
+    flex: 1,
+  },
+  speedPillsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginLeft: 6,
+  },
+  speedPill: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    backgroundColor: '#F1F5F9',
+  },
+  speedPillActive: {
+    backgroundColor: colors.primary,
+  },
+  speedPillText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: colors.mist,
+  },
+  speedPillTextActive: {
+    color: colors.white,
   },
 });

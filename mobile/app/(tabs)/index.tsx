@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '../../src/components/Header';
+import { AudioQuickRecord } from '../../src/components/AudioQuickRecord';
 import { colors } from '../../src/theme/colors';
 import { useApp } from '../../src/store/appStore';
 import {
@@ -98,6 +99,9 @@ export default function HomeScreen() {
             <View style={styles.toggleThumb} />
           </View>
         </TouchableOpacity>
+
+        {/* ── PROMINENT HOME AUDIO QUICK-RECORD WIDGET ── */}
+        <AudioQuickRecord />
 
         {/* ── 2x2 CORE ACTIONS GRID (Inspired by Screen 1 4 Cards: Transfers, History, Deposit, Financial) ── */}
         <View style={styles.sectionHeaderRow}>
