@@ -16,20 +16,22 @@ const DARIJA_ARABIC_WORDS = [
   'دير', 'ندير', 'راجلي', 'بغيت', 'خفت', 'كيهددني', 'كيضربني', 'زوينة',
   'شكون', 'فين', 'كيفاش', 'شحال', 'مزيان', 'ولدي', 'بنتي', 'دارنا',
   'صاحبتي', 'الخدمة', 'محروقة', 'عافاك', 'حشومة', 'واخا', 'ماشي', 'هادشي',
-  'لاباس', 'كي داير', 'كيداير', 'كيدايرة', 'كتسمعني', 'درت', 'غادي', 'غانمشي'
+  'لاباس', 'كي داير', 'كيداير', 'كيدايرة', 'كتسمعني', 'درت', 'غادي', 'غانمشي',
+  'نسولك', 'شي حاجة', 'تعرضت', 'للتحرش', 'نشكي', 'مشكل', 'حقوقي', 'جمعية', 'تعاوني'
 ];
 
 // Moroccan Arabizi distinctive words and number substitutions
 const ARABIZI_MARKERS = [
   /\b(salam|kidayr|kidayra|labas|chokran|choukrane|merhba|marhba)\b/i,
-  /\b(chno|chnou|wach|ndir|kifach|kifech|3lach|3afak|3andi|dyali|dyal)\b/i,
-  /\b(daba|bghit|khft|kayn|kayna|bzf|bzaf|makaynch|walou|walo)\b/i,
-  /\b(rajli|sahbti|khti|khoya|dar|lwalida|lwalid|wldi|bnti)\b/i,
+  /\b(chno|chnou|wach|wash|ndir|kifach|kifech|3lach|3afak|3andi|dyali|dyal)\b/i,
+  /\b(daba|bghit|khft|kayn|kayna|bzf|bzaf|makaynch|walou|walo|chi|haja|chi haja)\b/i,
+  /\b(rajli|sahbti|khti|khoya|dar|lwalida|lwalid|wldi|bnti|m3aya|m3ak)\b/i,
   /\b(kaydrabni|kaydrbni|kayhadedni|kaytaba3ni|hchouma|wakha|machi|hadchi)\b/i,
   /\b(ghadi|ghadya|nmchi|lcomissariat|lma7kama|chouhad|lmo7ami)\b/i,
-  /\b(l7a9|lha9|l9anoun|lqanoun|taharouch|taharrouch|i3tida2)\b/i,
-  /[235789][a-z]/i, // Arabizi numbers preceding letters (e.g., 3afak, 7a9, 9anoun)
-  /[a-z][235789]/i  // Arabizi numbers following letters (e.g., tla9, sda3)
+  /\b(l7a9|lha9|l9anoun|lqanoun|taharouch|taharrouch|ta7aroch|ta7arrouch|i3tida2)\b/i,
+  /\b(nsawlk|sawlk|nswl|sawlni|nchki|ncheki|chki|t3rdt|t3redt|7o9o9|7o9ou9|jam3iya|t3awni|mochkil|lmochkil)\b/i,
+  /[235789][a-z]/i, // Arabizi numbers preceding letters (e.g., 3afak, 7a9, 9anoun, 3lik, 7o9o9)
+  /[a-z][235789]/i  // Arabizi numbers following letters (e.g., tla9, sda3, t3rdt)
 ];
 
 // French distinctive markers

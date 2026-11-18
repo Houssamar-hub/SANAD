@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Platform,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { colors } from '../../src/theme/colors';
 import { SanadLogo } from '../../src/components/SanadLogo';
@@ -41,7 +43,13 @@ const SLIDES = [
 
 export default function OnboardingScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const safeTop = Math.max(
+    insets.top,
+    Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 10
+  );
 
   const handleNext = () => {
     if (currentSlide < SLIDES.length - 1) {
@@ -61,7 +69,7 @@ export default function OnboardingScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="dark-content" />
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: safeTop + 8 }]}>
         {/* Header */}
         <View style={styles.header}>
           <SanadLogo size="small" />

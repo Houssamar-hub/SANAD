@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Platform, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SanadLogo } from './SanadLogo';
 import { QuickExitButton } from './QuickExitButton';
 import { colors } from '../theme/colors';
 import { useApp } from '../store/appStore';
-import { Globe, AlertCircle } from 'lucide-react-native';
+import { Globe } from 'lucide-react-native';
 
 export const Header: React.FC = () => {
   const { language, setLanguage, openSos, isRTL } = useApp();
+  const insets = useSafeAreaInsets();
 
   const cycleLanguage = () => {
     if (language === 'fr') setLanguage('ar');
@@ -21,8 +23,14 @@ export const Header: React.FC = () => {
     return 'دارجة';
   };
 
+  // Calculate balanced top padding respecting status bar and notch
+  const safeTopPadding = Math.max(
+    insets.top,
+    Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 8
+  );
+
   return (
-    <View style={[styles.header, isRTL && styles.rtlRow]}>
+    <View style={[styles.header, { paddingTop: safeTopPadding + 6 }, isRTL && styles.rtlRow]}>
       <SanadLogo size="small" />
 
       <View style={styles.actions}>
@@ -60,7 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingBottom: 10,
     backgroundColor: colors.white,
     borderBottomWidth: 1,
     borderBottomColor: colors.chalk,

@@ -54,8 +54,8 @@ const INTENT_PATTERNS = {
     /\b(coups et blessures|agressee physiquement|agression physique|tabassee|frappee|volontaires)\b/i
   ],
   [INTENTS.SEXUAL_HARASSMENT]: [
-    /\b(taharrouch|taharouch|taharrush|kaytaharach|kayt7rech|harcelement sexuel|agression sexuelle|igtisab|viol|attouchement|kay9isni)\b/i,
-    /(تحرش|التحرش|تحرش جنسي|التحرش الجنسي|اعتداء جنسي|اغتصاب|هتك عرض|لمسني بزز|تحرش بي|التحرش في الفضاء)/i,
+    /\b(taharrouch|taharouch|taharrush|ta7aroch|ta7arrouch|kaytaharach|kayt7rech|harcelement sexuel|agression sexuelle|igtisab|viol|attouchement|kay9isni|t3rdt|t3redt)\b/i,
+    /(تحرش|التحرش|تحرش جنسي|التحرش الجنسي|اعتداء جنسي|اغتصاب|هتك عرض|لمسني بزز|تحرش بي|التحرش في الفضاء|تعرضت للتحرش|تعرضت للتحرش الجنسي)/i,
     /\b(harcelement de rue|taharouch f chari3|kaytbe3ni f chari3|propos et gestes|gestes deplaces|transports publics)\b/i
   ],
   [INTENTS.WORKPLACE_HARASSMENT]: [
@@ -71,22 +71,23 @@ const INTENT_PATTERNS = {
   ],
   [INTENTS.LEGAL_PROCEDURE]: [
     /\b(plainte|chkaya|chkawa|procedur|procedure|chihada tibiya|certificat medical|commissariat|mahkama|tribunal|wakil lmalik|procureur)\b/i,
-    /\b(kifach ndir chkaya|kifach ndfe3 plainte|fin nmchi|kifach ncheki|comment porter plainte|deposer plainte|demarches|etapes pour deposer)\b/i,
-    /(شكايه|كيفاش ندير شكايه|كيفاش نحط شكايه|وكيل الملك|المحكمه|شهاده طبيه|اجراءات رفع دعوي|المسطره القانونيه|كيف اشتكي|المحكمه الابتدائيه)/i
+    /\b(kifach ndir chkaya|kifach ndfe3 plainte|fin nmchi|kifach ncheki|kifach nchki|nchki|ncheki|bghit nchki|comment porter plainte|deposer plainte|demarches|etapes pour deposer)\b/i,
+    /(شكايه|كيفاش ندير شكايه|كيفاش نحط شكايه|وكيل الملك|المحكمه|شهاده طبيه|اجراءات رفع دعوي|المسطره القانونيه|كيف اشتكي|كيفاش نشكي|بغيت نشكي|المحكمه الابتدائيه)/i
   ],
   [INTENTS.REQUEST_SUPPORT]: [
     /\b(centre|jam3iya|jam3iyat|association|hebergement|iwa2|mouhami|avocat|psycologue|psy|tabib)\b/i,
-    /\b(centre d[' ]ecoute|centre d[' ]hebergement|mosa3ada|aide juridique|aide psychologique|orientation|femmes battues|soutien juridique)\b/i,
-    /(جمعيه|جمعيات|مركز استماع|مراكز الاستماع|ايواء|مركز ايواء|مساعده قانونيه|محامي بالمجان|طبيب نفسي|اين اجد مساعده|اين اجد مركز)/i
+    /\b(centre d[' ]ecoute|centre d[' ]hebergement|mosa3ada|aide juridique|aide psychologique|orientation|femmes battues|soutien juridique|t3awni|chi jam3iya)\b/i,
+    /\b(fin n9der nl9a|fin nl9a|fin nl9a chi jam3iya|trouver une association|besoin d'une association)\b/i,
+    /(جمعيه|جمعيات|مركز استماع|مراكز الاستماع|ايواء|مركز ايواء|مساعده قانونيه|محامي بالمجان|طبيب نفسي|اين اجد مساعده|اين اجد مركز|شي جمعيه|جمعيه تعاوني)/i
   ],
   [INTENTS.DISCRIMINATION]: [
     /\b(discrimination|tamyiz|irtt|tarka|mirat|inegalite|sexisme|inégalités|inegalites)\b/i,
     /(تمييز|التمييز|التمييز علي اساس الجنس|الارث|الميراث|حقوق المراه والمساواه|الترقيه والاجور)/i
   ],
   [INTENTS.LEGAL_QUESTION]: [
-    /\b(9anoun|qanoun|loi|droit|droits|code|article|articles|moudawana|moudawwana|modawana|103-13|103\.13|nafa9a|hadana|talaq|tala9|ch9a9|khol3)\b/i,
-    /\b(validite|contrat|mariage|divorce|garde des enfants|pension alimentaire|droits de la femme|code penal)\b/i,
-    /(قانون|القانون|حقوق|مدونه الاسره|القانون 103-13|القانون الجنائي|طلاق|شقاق|نفقه|حضانه|خلع|ثبوت الزوجيه|عقوبه)/i,
+    /\b(7o9o9|7o9ou9|ho9oq|9anoun|qanoun|loi|droit|droits|code|article|articles|moudawana|moudawwana|modawana|103-13|103\.13|nafa9a|hadana|talaq|tala9|ch9a9|khol3)\b/i,
+    /\b(validite|contrat|mariage|divorce|garde des enfants|pension alimentaire|droits de la femme|code penal|wash 3andi chi 7o9o9|wach 3andi chi 7o9o9)\b/i,
+    /(قانون|القانون|حقوق|حقوقي|واش عندي شي حقوق|مدونه الاسره|القانون 103-13|القانون الجنائي|طلاق|شقاق|نفقه|حضانه|خلع|ثبوت الزوجيه|عقوبه)/i,
     /\b(chnowa kay9ol l9anoun|chhal l3o9oba|chhal l3o9ouba|quelle est la peine|que dit la loi|mes droits|dispositions|sanctionnant)\b/i
   ],
   [INTENTS.GENERAL_CONVERSATION]: [
@@ -168,6 +169,12 @@ function classifyIntent(text, language = null) {
     scores[INTENTS.CYBER_HARASSMENT] += 3;
   }
 
+  // Boost REQUEST_SUPPORT when specific support terms are used
+  if (/\b(centre|jam3iya|association|hebergement|مراكز|جمعية|مركز)\b/i.test(clean) ||
+      /\b(centre|jam3iya|association|hebergement|مراكز|جمعيه|مركز)\b/i.test(normalized)) {
+    scores[INTENTS.REQUEST_SUPPORT] += 2;
+  }
+
   // Determine highest scoring intent
   let topIntent = INTENTS.GENERAL_CONVERSATION;
   let maxScore = 0;
@@ -235,12 +242,23 @@ function isGreetingOrSmallTalk(lower, normalized) {
     'ash khbark', 'ach khbark', 'sbah lkhir', 'msa lkhir',
     'merci', 'chokran', 'choukran', 'thx', 'barak allaho fik',
     'au revoir', 'bslama', 'bsslama', 'bye', 'bonne journee', 'bonne nuit',
+    'bghit nsawlk', 'bghit nsawlk 3la chi haja', 'bghit nswl', '3andi soual', 'j\'ai une question',
     'السلام', 'السلام عليكم', 'اهلا', 'مرحبا', 'صباح الخير', 'مساء الخير',
-    'لاباس', 'كيف الحال', 'شكرا', 'شكرا جزيلا', 'بسلامه', 'مع السلامه'
+    'لاباس', 'كيف الحال', 'شكرا', 'شكرا جزيلا', 'بسلامه', 'مع السلامه',
+    'بغيت نسولك', 'بغيت نسولك على شي حاجة', 'عندي سؤال'
   ];
 
   if (pureGreetings.includes(lower) || pureGreetings.includes(normalized)) {
     return true;
+  }
+
+  // Conversational openings (e.g. "Bghit nsawlk 3la chi haja", "Salam, labas 3lik?")
+  const conversationalOpeningPattern = /^(bghit nsawlk|bghit nswl|3andi soual|j'ai une question|est-ce que je peux te poser|بغيت نسولك|عندي سؤال)(\s.*)?$/i;
+  if (conversationalOpeningPattern.test(lower) || conversationalOpeningPattern.test(normalized)) {
+    // Only if it doesn't contain a specific crime or urgent violence term
+    if (!/(drbni|kaydrbni|9telni|taharoch|taharouch|viol|agression|plainte|chkaya|يقتلني|ضرب|اعتداء|عنف)/i.test(lower)) {
+      return true;
+    }
   }
 
   // Starts with greeting and doesn't contain legal terms
@@ -249,7 +267,7 @@ function isGreetingOrSmallTalk(lower, normalized) {
                        !/(قانون|شكايه|طلاق|ضرب|عنف|تحرش|بوليس|محكمه)/.test(normalized);
 
   if (greetingPattern.test(lower) || greetingPattern.test(normalized)) {
-    if (lower.split(/\s+/).length <= 5 && noLegalTerms) {
+    if (lower.split(/\s+/).length <= 6 && noLegalTerms) {
       return true;
     }
   }

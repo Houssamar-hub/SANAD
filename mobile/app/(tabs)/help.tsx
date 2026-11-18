@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -22,36 +22,144 @@ import {
   Plus,
   Trash2,
   ShieldAlert,
+  Search,
+  RotateCcw,
+  Building2,
+  Globe,
+  Mail,
+  HelpCircle,
 } from 'lucide-react-native';
 
-const CITIES = ['Toutes', 'Casablanca', 'Rabat', 'Fès', 'Marrakech', 'Tanger', 'Agadir', 'Oujda'];
+const MOROCCAN_REGIONS = [
+  'Toutes les régions',
+  'Tanger-Tétouan-Al Hoceïma',
+  'L\'Oriental',
+  'Fès-Meknès',
+  'Rabat-Salé-Kénitra',
+  'Béni Mellal-Khénifra',
+  'Casablanca-Settat',
+  'Marrakech-Safi',
+  'Drâa-Tafilalet',
+  'Souss-Massa',
+  'Guelmim-Oued Noun',
+  'Laâyoune-Sakia El Hamra',
+  'Dakhla-Oued Ed-Dahab',
+];
+
+const CATEGORIES = [
+  { id: 'all', label: 'Toutes les catégories', labelAr: 'كل الفئات' },
+  { id: 'lutte_violence', label: 'Lutte violences', labelAr: 'مناهضة العنف' },
+  { id: 'droits_femmes', label: 'Droits des femmes', labelAr: 'حقوق النساء' },
+  { id: 'assistance_juridique', label: 'Assistance juridique', labelAr: 'الدعم القانوني' },
+  { id: 'hebergement', label: 'Hébergement d\'urgence', labelAr: 'الإيواء المستعجل' },
+  { id: 'cyberharcelement', label: 'Cyberharcèlement', labelAr: 'العنف الرقمي' },
+  { id: 'autonomisation', label: 'Autonomisation & Écoute', labelAr: 'التمكين والاستماع' },
+];
+
+const TYPES = [
+  { id: 'all', label: 'Tous les types', labelAr: 'الكل' },
+  { id: 'association', label: 'Associations (ONG)', labelAr: 'جمعيات المجتمع المدني' },
+  { id: 'institution', label: 'Services Publics & Cellules', labelAr: 'مؤسسات وخلايا رسمية' },
+];
 
 export default function HelpScreen() {
   const { t, isRTL, trustedContacts, addTrustedContact, removeTrustedContact } = useApp();
+  const [centers, setCenters] = useState<any[]>(FALLBACK_CENTERS);
+  const [selectedRegion, setSelectedRegion] = useState('Toutes les régions');
   const [selectedCity, setSelectedCity] = useState('Toutes');
-  const [centers, setCenters] = useState(FALLBACK_CENTERS);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Emergency contact local state
   const [showAddContact, setShowAddContact] = useState(false);
   const [newContactName, setNewContactName] = useState('');
   const [newContactPhone, setNewContactPhone] = useState('');
   const [newContactRel, setNewContactRel] = useState('Proche');
 
+  // Load from API with query params or fallback
   useEffect(() => {
-    const cityParam = selectedCity === 'Toutes' ? 'all' : selectedCity;
+    const params = new URLSearchParams();
+    if (selectedRegion !== 'Toutes les régions') params.append('region', selectedRegion);
+    if (selectedCity !== 'Toutes') params.append('city', selectedCity);
+    if (selectedCategory !== 'all') params.append('category', selectedCategory);
+    if (selectedType !== 'all') params.append('type', selectedType);
+    if (searchQuery.trim()) params.append('search', searchQuery.trim());
+
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+
     apiClient
-      .get(`/centers?city=${cityParam}`)
+      .get(`/centers${queryString}`)
       .then((res) => {
-        if (res.data.centers && res.data.centers.length > 0) {
+        if (res.data?.centers) {
           setCenters(res.data.centers);
         }
       })
       .catch(() => {
-        const filtered =
-          selectedCity === 'Toutes'
-            ? FALLBACK_CENTERS
-            : FALLBACK_CENTERS.filter((c) => c.city.toLowerCase() === selectedCity.toLowerCase());
+        // Local client-side filtering on FALLBACK_CENTERS
+        let filtered = [...FALLBACK_CENTERS];
+        if (selectedRegion !== 'Toutes les régions') {
+          filtered = filtered.filter(
+            (c) => c.region && c.region.toLowerCase() === selectedRegion.toLowerCase()
+          );
+        }
+        if (selectedCity !== 'Toutes') {
+          filtered = filtered.filter(
+            (c) => c.city && c.city.toLowerCase() === selectedCity.toLowerCase()
+          );
+        }
+        if (selectedCategory !== 'all') {
+          filtered = filtered.filter((c) => c.category === selectedCategory);
+        }
+        if (selectedType !== 'all') {
+          filtered = filtered.filter((c) => c.type === selectedType);
+        }
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase();
+          filtered = filtered.filter(
+            (c) =>
+              c.name.toLowerCase().includes(q) ||
+              (c.nameAr && c.nameAr.includes(q)) ||
+              (c.services && c.services.some((s: string) => s.toLowerCase().includes(q))) ||
+              (c.city && c.city.toLowerCase().includes(q))
+          );
+        }
         setCenters(filtered);
       });
-  }, [selectedCity]);
+  }, [selectedRegion, selectedCity, selectedCategory, selectedType, searchQuery]);
+
+  // Dynamic list of cities depending on selected region
+  const availableCities = useMemo(() => {
+    let source = FALLBACK_CENTERS;
+    if (selectedRegion !== 'Toutes les régions') {
+      source = FALLBACK_CENTERS.filter(
+        (c) => c.region && c.region.toLowerCase() === selectedRegion.toLowerCase()
+      );
+    }
+    const uniqueCities = Array.from(new Set(source.map((c) => c.city).filter(Boolean)));
+    return ['Toutes', ...uniqueCities];
+  }, [selectedRegion]);
+
+  // When region changes, if current city is not in new region, reset to "Toutes"
+  const handleRegionChange = (region: string) => {
+    setSelectedRegion(region);
+    setSelectedCity('Toutes');
+  };
+
+  const handleResetFilters = () => {
+    setSelectedRegion('Toutes les régions');
+    setSelectedCity('Toutes');
+    setSelectedCategory('all');
+    setSelectedType('all');
+    setSearchQuery('');
+  };
+
+  const hasActiveFilters =
+    selectedRegion !== 'Toutes les régions' ||
+    selectedCity !== 'Toutes' ||
+    selectedCategory !== 'all' ||
+    selectedType !== 'all' ||
+    searchQuery.trim().length > 0;
 
   const confirmCall = (number: string, title: string) => {
     Alert.alert(t.emergencyConfirm, `${title} (${number})`, [
@@ -65,6 +173,21 @@ export default function HelpScreen() {
         },
       },
     ]);
+  };
+
+  const openUrl = (url: string) => {
+    if (!url) return;
+    const cleanUrl = url.startsWith('http') ? url : `https://${url}`;
+    Linking.openURL(cleanUrl).catch(() => {
+      Alert.alert('Lien inaccessible', `Impossible d'ouvrir l'adresse : ${url}`);
+    });
+  };
+
+  const openEmail = (email: string) => {
+    if (!email) return;
+    Linking.openURL(`mailto:${email}`).catch(() => {
+      Alert.alert('Email inaccessible', `Impossible d'ouvrir l'application de messagerie.`);
+    });
   };
 
   const handleAddContact = () => {
@@ -93,16 +216,18 @@ export default function HelpScreen() {
       >
         {/* Title Header */}
         <View style={styles.pageHeader}>
-          <Text style={styles.pageTag}>ASSISTANCE D'URGENCE & PROXIMITÉ</Text>
+          <Text style={styles.pageTag}>ASSISTANCE D'URGENCE & ANNUAIRE MAROCAIN</Text>
           <Text style={[styles.pageTitle, isRTL && styles.rtl]}>{t.help.title}</Text>
-          <Text style={[styles.pageSub, isRTL && styles.rtl]}>{t.help.subtitle}</Text>
+          <Text style={[styles.pageSub, isRTL && styles.rtl]}>
+            Annuaire vérifié des associations de protection des femmes et numéros d'urgence dans les 12 régions du Royaume.
+          </Text>
         </View>
 
-        {/* ── 3 BIG EMERGENCY CARDS (Inspired by big stats in screenshot) ── */}
+        {/* ── 3 BIG EMERGENCY CARDS ── */}
         <View style={styles.emergencyCard}>
           <View style={styles.emergencyTopRow}>
             <ShieldAlert size={16} color={colors.terracotta} />
-            <Text style={styles.emergencyTitle}>NUMÉROS D'URGENCE NATIONAUX (24H/24)</Text>
+            <Text style={styles.emergencyTitle}>NUMÉROS D'URGENCE NATIONAUX (24H/24 · GRATUITS)</Text>
           </View>
 
           <View style={styles.hotlinesRow}>
@@ -114,7 +239,7 @@ export default function HelpScreen() {
             >
               <Text style={[styles.hotlineDigit, { color: colors.terracotta }]}>19</Text>
               <Text style={styles.hotlineName}>Police</Text>
-              <Text style={styles.hotlineZone}>Ville</Text>
+              <Text style={styles.hotlineZone}>Périmètre urbain</Text>
             </TouchableOpacity>
 
             <View style={styles.hotlineDivider} />
@@ -127,7 +252,7 @@ export default function HelpScreen() {
             >
               <Text style={[styles.hotlineDigit, { color: colors.primary }]}>177</Text>
               <Text style={styles.hotlineName}>Gendarme</Text>
-              <Text style={styles.hotlineZone}>Rural</Text>
+              <Text style={styles.hotlineZone}>Rural / Autoroute</Text>
             </TouchableOpacity>
 
             <View style={styles.hotlineDivider} />
@@ -140,7 +265,7 @@ export default function HelpScreen() {
             >
               <Text style={[styles.hotlineDigit, { color: colors.secondaryDark }]}>15</Text>
               <Text style={styles.hotlineName}>Protection</Text>
-              <Text style={styles.hotlineZone}>Médical</Text>
+              <Text style={styles.hotlineZone}>Secours & Ambulances</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -152,7 +277,7 @@ export default function HelpScreen() {
             <Text style={styles.sectionHeading}>CERCLE DE CONFIANCE PRIVÉ</Text>
           </View>
           <Text style={[styles.sectionSubtitle, isRTL && styles.rtl]}>
-            Vos contacts d'alerte immédiate enregistrés sur cet appareil.
+            Vos contacts d'alerte immédiate enregistrés localement sur cet appareil.
           </Text>
         </View>
 
@@ -226,86 +351,296 @@ export default function HelpScreen() {
           )}
         </View>
 
-        {/* ── SUPPORT CENTERS DIRECTORY ── */}
+        {/* ── ASSOCIATIONS & REGIONAL DIRECTORY ── */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionHeading}>{t.help.centersTitle.toUpperCase()}</Text>
+          <View style={styles.sectionTagRow}>
+            <Building2 size={14} color={colors.primary} />
+            <Text style={styles.sectionHeading}>RÉSEAU NATIONAL DES ASSOCIATIONS ET CENTRES</Text>
+          </View>
           <Text style={[styles.sectionSubtitle, isRTL && styles.rtl]}>
-            Centres d'écoute et d'accompagnement juridique vérifiés.
+            Annuaire exhaustif des 12 régions administratives du Maroc : écoute, hébergement d'urgence, soutien juridique et autonomisation.
           </Text>
         </View>
 
-        {/* City Filter Pills */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.cityScroll}
-          contentContainerStyle={styles.cityContent}
-        >
-          {CITIES.map((city) => {
-            const active = selectedCity === city;
-            return (
-              <TouchableOpacity
-                key={city}
-                style={[styles.cityPill, active && styles.cityPillActive]}
-                onPress={() => setSelectedCity(city)}
-                activeOpacity={0.8}
-              >
-                <Text style={[styles.cityPillText, active && styles.cityPillTextActive]}>
-                  {city}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-
-        {/* Centers Cards */}
-        <View style={styles.centersStack}>
-          {centers.map((center: any, idx: number) => {
-            const displayName = isRTL && center.nameAr ? center.nameAr : center.name;
-            const displayAddress = isRTL && center.addressAr ? center.addressAr : center.address;
-
-            return (
-              <View key={center._id || idx} style={styles.centerItem}>
-                <View style={styles.centerItemHeader}>
-                  <View style={styles.cityBadge}>
-                    <MapPin size={11} color={colors.primary} />
-                    <Text style={styles.cityBadgeText}>{center.city}</Text>
-                  </View>
-                  <View style={styles.verifiedRow}>
-                    <CheckCircle2 size={12} color={colors.secondaryDark} />
-                    <Text style={styles.verifiedText}>Vérifié CNDH</Text>
-                  </View>
-                </View>
-
-                <Text style={[styles.centerName, isRTL && styles.rtl]}>{displayName}</Text>
-                <Text style={[styles.centerAddress, isRTL && styles.rtl]}>{displayAddress}</Text>
-
-                {center.services && center.services.length > 0 && (
-                  <View style={styles.servicePillGroup}>
-                    {center.services.map((srv: string, sIdx: number) => (
-                      <View key={sIdx} style={styles.serviceTag}>
-                        <Text style={styles.serviceTagText}>{srv}</Text>
-                      </View>
-                    ))}
-                  </View>
-                )}
-
-                <TouchableOpacity
-                  style={styles.centerCallBtn}
-                  onPress={() => confirmCall(center.phone, displayName)}
-                  activeOpacity={0.85}
-                >
-                  <PhoneCall size={14} color={colors.white} />
-                  <Text style={styles.centerCallText}>
-                    {t.help.callCenter} · {center.phone}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
+        {/* Search Bar */}
+        <View style={styles.searchWrapper}>
+          <Search size={16} color={colors.mist} style={styles.searchIcon} />
+          <TextInput
+            style={[styles.searchInput, isRTL && styles.rtl]}
+            placeholder="Rechercher une association, une ville ou un service..."
+            placeholderTextColor={colors.fog}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.searchClearBtn}>
+              <Text style={styles.searchClearText}>✕</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
-        <View style={{ height: 32 }} />
+        {/* 12 Regions Selector */}
+        <View style={styles.filterSection}>
+          <Text style={styles.filterLabel}>RÉGION DU MAROC (12 RÉGIONS)</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filterPillScroll}
+          >
+            {MOROCCAN_REGIONS.map((region) => {
+              const active = selectedRegion === region;
+              return (
+                <TouchableOpacity
+                  key={region}
+                  style={[styles.filterPill, active && styles.filterPillActive]}
+                  onPress={() => handleRegionChange(region)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[styles.filterPillText, active && styles.filterPillTextActive]}>
+                    {region}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+        {/* Dependent City Selector */}
+        <View style={styles.filterSection}>
+          <Text style={styles.filterLabel}>VILLE DANS LA RÉGION</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filterPillScroll}
+          >
+            {availableCities.map((city) => {
+              const active = selectedCity === city;
+              return (
+                <TouchableOpacity
+                  key={city}
+                  style={[styles.cityPill, active && styles.cityPillActive]}
+                  onPress={() => setSelectedCity(city)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[styles.cityPillText, active && styles.cityPillTextActive]}>
+                    {city}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+        {/* Categories & Type Filters */}
+        <View style={styles.filterSection}>
+          <Text style={styles.filterLabel}>DOMAINE D'INTERVENTION</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filterPillScroll}
+          >
+            {CATEGORIES.map((cat) => {
+              const active = selectedCategory === cat.id;
+              return (
+                <TouchableOpacity
+                  key={cat.id}
+                  style={[styles.categoryPill, active && styles.categoryPillActive]}
+                  onPress={() => setSelectedCategory(cat.id)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[styles.categoryPillText, active && styles.categoryPillTextActive]}>
+                    {isRTL ? cat.labelAr : cat.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+        {/* Type Filter Pills: Association vs Institution */}
+        <View style={styles.filterSection}>
+          <Text style={styles.filterLabel}>TYPE D'ORGANISME</Text>
+          <View style={styles.typeRow}>
+            {TYPES.map((tp) => {
+              const active = selectedType === tp.id;
+              return (
+                <TouchableOpacity
+                  key={tp.id}
+                  style={[styles.typePill, active && styles.typePillActive]}
+                  onPress={() => setSelectedType(tp.id)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[styles.typePillText, active && styles.typePillTextActive]}>
+                    {isRTL ? tp.labelAr : tp.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+
+        {/* Filter Meta Bar (Count + Reset button) */}
+        <View style={styles.resultsBar}>
+          <Text style={styles.resultsCount}>
+            <Text style={styles.resultsCountBold}>{centers.length}</Text>{' '}
+            {centers.length > 1 ? 'associations et centres trouvés' : 'organisme trouvé'}
+          </Text>
+
+          {hasActiveFilters && (
+            <TouchableOpacity
+              style={styles.resetBtn}
+              onPress={handleResetFilters}
+              activeOpacity={0.8}
+            >
+              <RotateCcw size={12} color={colors.primary} />
+              <Text style={styles.resetBtnText}>Réinitialiser</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Empty State */}
+        {centers.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <HelpCircle size={44} color={colors.fog} />
+            <Text style={styles.emptyTitle}>Aucune association trouvée</Text>
+            <Text style={styles.emptySub}>
+              Aucun organisme ne correspond à vos filtres actuels dans cette zone. Essayez d'élargir la recherche ou de réinitialiser les critères.
+            </Text>
+            <TouchableOpacity style={styles.emptyResetBtn} onPress={handleResetFilters}>
+              <Text style={styles.emptyResetText}>Afficher toutes les régions</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          /* Centers Stack Cards */
+          <View style={styles.centersStack}>
+            {centers.map((center: any, idx: number) => {
+              const displayName = isRTL && center.nameAr ? center.nameAr : center.name;
+              const displayAddress = isRTL && center.addressAr ? center.addressAr : center.address;
+              const displayDesc = isRTL && center.descriptionAr ? center.descriptionAr : center.description;
+              const isInstitution = center.type === 'institution';
+
+              return (
+                <View key={center._id || idx} style={styles.centerItem}>
+                  {/* Card Header Badges */}
+                  <View style={styles.centerItemHeader}>
+                    <View style={styles.badgeRow}>
+                      <View style={styles.cityBadge}>
+                        <MapPin size={11} color={colors.primary} />
+                        <Text style={styles.cityBadgeText}>{center.city}</Text>
+                      </View>
+                      <View
+                        style={[
+                          styles.typeBadge,
+                          isInstitution ? styles.typeBadgeInst : styles.typeBadgeAssoc,
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.typeBadgeBaseText,
+                            isInstitution ? styles.typeBadgeInstText : styles.typeBadgeAssocText,
+                          ]}
+                        >
+                          {isInstitution ? 'Service Public' : 'ONG / Association'}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.verifiedRow}>
+                      <CheckCircle2 size={12} color={colors.secondaryDark} />
+                      <Text style={styles.verifiedText}>Vérifié</Text>
+                    </View>
+                  </View>
+
+                  {/* Association Name */}
+                  <Text style={[styles.centerName, isRTL && styles.rtl]}>{displayName}</Text>
+
+                  {/* Region indicator */}
+                  {center.region && (
+                    <Text style={styles.regionText}>
+                      Région : <Text style={styles.regionTextBold}>{center.region}</Text>
+                    </Text>
+                  )}
+
+                  {/* Description if available */}
+                  {displayDesc && (
+                    <Text style={[styles.centerDesc, isRTL && styles.rtl]} numberOfLines={3}>
+                      {displayDesc}
+                    </Text>
+                  )}
+
+                  {/* Address */}
+                  {displayAddress && (
+                    <Text style={[styles.centerAddress, isRTL && styles.rtl]}>
+                      📍 {displayAddress}
+                    </Text>
+                  )}
+
+                  {/* Services pills */}
+                  {center.services && center.services.length > 0 && (
+                    <View style={styles.servicePillGroup}>
+                      {center.services.map((srv: string, sIdx: number) => (
+                        <View key={sIdx} style={styles.serviceTag}>
+                          <Text style={styles.serviceTagText}>{srv}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+
+                  {/* Primary Call CTA */}
+                  <TouchableOpacity
+                    style={styles.centerCallBtn}
+                    onPress={() => confirmCall(center.phone, displayName)}
+                    activeOpacity={0.85}
+                  >
+                    <PhoneCall size={14} color={colors.white} />
+                    <Text style={styles.centerCallText}>
+                      {t.help.callCenter} · {center.phone}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {/* Secondary Actions (Email & Website) */}
+                  {(center.website || center.email) && (
+                    <View style={styles.centerSecondaryActions}>
+                      {center.website && (
+                        <TouchableOpacity
+                          style={styles.secondaryBtn}
+                          onPress={() => openUrl(center.website)}
+                          activeOpacity={0.8}
+                        >
+                          <Globe size={13} color={colors.primary} />
+                          <Text style={styles.secondaryBtnText} numberOfLines={1}>
+                            Site web officiel
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                      {center.email && (
+                        <TouchableOpacity
+                          style={styles.secondaryBtn}
+                          onPress={() => openEmail(center.email)}
+                          activeOpacity={0.8}
+                        >
+                          <Mail size={13} color={colors.slate} />
+                          <Text style={styles.secondaryBtnText} numberOfLines={1}>
+                            Envoyer un email
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
+
+                  {/* Verification source footnote */}
+                  {center.sourceName && (
+                    <Text style={styles.sourceFootnote}>
+                      Source : {center.sourceName}
+                    </Text>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        )}
+
+        <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -314,7 +649,7 @@ export default function HelpScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   scroll: { flex: 1 },
-  content: { paddingBottom: 24 },
+  content: { paddingBottom: 32 },
   rtl: { textAlign: 'right' },
 
   pageHeader: {
@@ -394,9 +729,10 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   hotlineZone: {
-    fontSize: 11,
+    fontSize: 10,
     color: colors.mist,
-    marginTop: 1,
+    marginTop: 2,
+    textAlign: 'center',
   },
   hotlineDivider: {
     width: 1,
@@ -408,7 +744,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     paddingHorizontal: 20,
     marginTop: 24,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   sectionTagRow: {
     flexDirection: 'row',
@@ -538,9 +874,41 @@ const styles = StyleSheet.create({
   },
   formSaveText: { fontSize: 12, fontWeight: '800', color: colors.white },
 
-  cityScroll: { marginTop: 4, marginBottom: 12 },
-  cityContent: { paddingHorizontal: 16, gap: 8 },
-  cityPill: {
+  // SEARCH BAR
+  searchWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    marginHorizontal: 16,
+    marginBottom: 14,
+    paddingHorizontal: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.chalk,
+    height: 46,
+  },
+  searchIcon: { marginRight: 10 },
+  searchInput: { flex: 1, fontSize: 13, color: colors.ink },
+  searchClearBtn: { padding: 6 },
+  searchClearText: { fontSize: 14, color: colors.mist, fontWeight: '700' },
+
+  // FILTER SECTIONS
+  filterSection: {
+    marginBottom: 12,
+  },
+  filterLabel: {
+    fontSize: 10,
+    fontWeight: '900',
+    color: colors.mist,
+    letterSpacing: 0.8,
+    marginHorizontal: 20,
+    marginBottom: 6,
+  },
+  filterPillScroll: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  filterPill: {
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 20,
@@ -548,18 +916,170 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.chalk,
   },
-  cityPillActive: {
+  filterPillActive: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
-  cityPillText: { fontSize: 12, fontWeight: '700', color: colors.slate },
-  cityPillTextActive: { color: colors.white },
+  filterPillText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.slate,
+  },
+  filterPillTextActive: {
+    color: colors.white,
+  },
 
-  centersStack: { paddingHorizontal: 16, gap: 12 },
+  cityPill: {
+    paddingHorizontal: 13,
+    paddingVertical: 6,
+    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.chalk,
+  },
+  cityPillActive: {
+    backgroundColor: colors.secondaryDark,
+    borderColor: colors.secondaryDark,
+  },
+  cityPillText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.slate,
+  },
+  cityPillTextActive: {
+    color: colors.white,
+  },
+
+  categoryPill: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.chalk,
+  },
+  categoryPillActive: {
+    backgroundColor: colors.ink,
+    borderColor: colors.ink,
+  },
+  categoryPillText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.slate,
+  },
+  categoryPillTextActive: {
+    color: colors.white,
+  },
+
+  typeRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  typePill: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderRadius: 14,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.chalk,
+  },
+  typePillActive: {
+    backgroundColor: colors.primaryLight,
+    borderColor: colors.primary,
+  },
+  typePillText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.slate,
+  },
+  typePillTextActive: {
+    color: colors.primary,
+    fontWeight: '800',
+  },
+
+  // RESULTS BAR
+  resultsBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginTop: 8,
+    marginBottom: 12,
+  },
+  resultsCount: {
+    fontSize: 12,
+    color: colors.mist,
+  },
+  resultsCountBold: {
+    fontWeight: '800',
+    color: colors.ink,
+  },
+  resetBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: colors.white,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.primaryLight,
+  },
+  resetBtnText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: colors.primary,
+  },
+
+  // EMPTY STATE
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 48,
+    marginHorizontal: 16,
+    backgroundColor: colors.white,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: colors.chalk,
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: colors.ink,
+    marginTop: 12,
+    marginBottom: 6,
+  },
+  emptySub: {
+    fontSize: 12,
+    color: colors.mist,
+    textAlign: 'center',
+    lineHeight: 18,
+    marginBottom: 16,
+  },
+  emptyResetBtn: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 18,
+    paddingVertical: 9,
+    borderRadius: 14,
+  },
+  emptyResetText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: colors.white,
+  },
+
+  // CENTERS LIST
+  centersStack: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
   centerItem: {
     backgroundColor: colors.white,
     borderRadius: 20,
-    padding: 18,
+    padding: 16,
     borderWidth: 1,
     borderColor: colors.chalk,
     shadowColor: colors.shadowColor,
@@ -572,32 +1092,109 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   cityBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     backgroundColor: colors.primaryLight,
-    paddingHorizontal: 9,
+    paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
   },
-  cityBadgeText: { fontSize: 11, fontWeight: '800', color: colors.primary },
-  verifiedRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  verifiedText: { fontSize: 11, fontWeight: '700', color: colors.secondaryDark },
+  cityBadgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: colors.primary,
+  },
+  typeBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  typeBadgeAssoc: {
+    backgroundColor: colors.chalk,
+  },
+  typeBadgeBaseText: {
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  typeBadgeAssocText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: colors.slate,
+  },
+  typeBadgeInst: {
+    backgroundColor: '#E0F2FE',
+  },
+  typeBadgeInstText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#0369A1',
+  },
 
-  centerName: { fontSize: 15, fontWeight: '800', color: colors.ink, marginBottom: 4 },
-  centerAddress: { fontSize: 12, color: colors.mist, marginBottom: 10, lineHeight: 17 },
+  verifiedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  verifiedText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.secondaryDark,
+  },
 
-  servicePillGroup: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 12 },
+  centerName: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: colors.ink,
+    marginBottom: 2,
+  },
+  regionText: {
+    fontSize: 11,
+    color: colors.mist,
+    marginBottom: 6,
+  },
+  regionTextBold: {
+    fontWeight: '700',
+    color: colors.slate,
+  },
+  centerDesc: {
+    fontSize: 12,
+    color: colors.slate,
+    lineHeight: 17,
+    marginBottom: 8,
+  },
+  centerAddress: {
+    fontSize: 11,
+    color: colors.mist,
+    marginBottom: 10,
+    lineHeight: 16,
+  },
+
+  servicePillGroup: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 12,
+  },
   serviceTag: {
     backgroundColor: colors.background,
-    paddingHorizontal: 9,
+    paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
   },
-  serviceTagText: { fontSize: 11, fontWeight: '700', color: colors.slate },
+  serviceTagText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.slate,
+  },
 
   centerCallBtn: {
     flexDirection: 'row',
@@ -608,5 +1205,39 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     borderRadius: 14,
   },
-  centerCallText: { fontSize: 12, fontWeight: '800', color: colors.white },
+  centerCallText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: colors.white,
+  },
+
+  centerSecondaryActions: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 8,
+  },
+  secondaryBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: colors.background,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.chalk,
+  },
+  secondaryBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.ink,
+  },
+  sourceFootnote: {
+    fontSize: 10,
+    color: colors.mist,
+    marginTop: 8,
+    fontStyle: 'italic',
+  },
 });
