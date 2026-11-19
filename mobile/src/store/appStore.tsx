@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Linking } from 'react-native';
 import { Language, translations } from '../i18n/translations';
+import { apiClient } from '../services/api';
 
 export interface TrustedContactItem {
   id: string;
@@ -85,16 +86,53 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setVoiceGuidanceEnabled(prev => !prev);
   };
 
+  // Synchronize trusted contacts with backend MongoDB
+  useEffect(() => {
+    apiClient
+      .get('/trusted-contacts')
+      .then((res) => {
+        if (res.data?.contacts && Array.isArray(res.data.contacts) && res.data.contacts.length > 0) {
+          setTrustedContacts(
+            res.data.contacts.map((c: any) => ({
+              id: c._id || c.id || Date.now().toString(),
+              name: c.name,
+              phone: c.phone,
+              relationship: c.relationship || 'Proche',
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const addTrustedContact = (contact: Omit<TrustedContactItem, 'id'>) => {
+    const tempId = Date.now().toString();
     const newItem: TrustedContactItem = {
       ...contact,
-      id: Date.now().toString()
+      id: tempId,
     };
-    setTrustedContacts(prev => [...prev, newItem]);
+    setTrustedContacts((prev) => [...prev, newItem]);
+
+    apiClient
+      .post('/trusted-contacts', {
+        name: contact.name,
+        phone: contact.phone,
+        relationship: contact.relationship || 'Proche',
+      })
+      .then((res) => {
+        if (res.data?.contact?._id) {
+          const serverId = res.data.contact._id;
+          setTrustedContacts((prev) =>
+            prev.map((c) => (c.id === tempId ? { ...c, id: serverId } : c))
+          );
+        }
+      })
+      .catch(() => {});
   };
 
   const removeTrustedContact = (id: string) => {
-    setTrustedContacts(prev => prev.filter(c => c.id !== id));
+    setTrustedContacts((prev) => prev.filter((c) => c.id !== id));
+    apiClient.delete(`/trusted-contacts/${id}`).catch(() => {});
   };
 
   return (

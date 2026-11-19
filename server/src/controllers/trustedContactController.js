@@ -12,12 +12,21 @@ const getContacts = async (req, res, next) => {
     let contacts = [];
     try {
       if (userId) {
-        contacts = await TrustedContact.find({ userId });
+        contacts = await TrustedContact.find({ userId }).sort({ createdAt: -1 });
       } else if (guestDeviceId) {
-        contacts = await TrustedContact.find({ guestDeviceId });
+        contacts = await TrustedContact.find({
+          $or: [
+            { guestDeviceId },
+            { guestDeviceId: null },
+            { guestDeviceId: { $exists: false } },
+            { userId: null }
+          ]
+        }).sort({ createdAt: -1 });
+      } else {
+        contacts = await TrustedContact.find({}).sort({ createdAt: -1 });
       }
     } catch (e) {
-      contacts = inMemoryContacts.filter(c => (userId && String(c.userId) === String(userId)) || (guestDeviceId && c.guestDeviceId === guestDeviceId));
+      contacts = inMemoryContacts;
     }
 
     res.json({
